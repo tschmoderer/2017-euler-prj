@@ -1,20 +1,43 @@
-clc
-clear all 
-close all 
+%----------------------------------------------------------%
+%-- FUNCTION MAIN_EULER --%
+% 
+%	Main routine of this project. 
+%
+%	In : 
+%			- N : interger specify the number of nodes
+% Out : 
+%			- If you correctly create the directories (see README), the function will create 
+%				many data files : 
+%					+ data/dt.dat : specify the timestep used
+%					+ data/[velocity,pressure,sound,energy,density]/[Number].dat : give one on this propreties on each nodes at the [Number] timestep
+%	
+%	Author : 
+% 	- Timothée Schmoderer
+%
+% TODO : 
+%   - A bit of optimisation 
+% 	- Find cfl number that fit better
+%   
+%		INSA de Rouen Normandie 2017	
+% 		Universität zu Köln 2017
+%		
+%----------------------------------------------------------%
+
+function main_euler(N)
+warning('off','all')
 
 % Constantes
 a = 0;
 b = 1;
 theta = 1.5;
 gamma = 1.4;
-T = 0.05;
-N = 300; 
+T = 0.1;
 dx = (b-a)/N;
 x = [a-dx/2:dx:b+dx/2];
 x = [x(1)-dx,x,x(end)+dx];
 cfl = 2;
 dt = cfl*dx^2;
-dlmwrite('Results/dt.dat',dt);
+dlmwrite('../data/dt.dat',dt);
 s = size(x);
 
 % Initialisation in Omega at t=0 and boundary conditions 
@@ -58,7 +81,7 @@ subplot(5,1,5),
 plot(x,E)
 title('Energy at t=0')
 
-pause; 
+print(['../img/initial_condition_',num2str(N),'_Nodes'],"-dpng");
 close all;
 
 %%% Let's Go %%%
@@ -67,11 +90,6 @@ U1_1 = zeros(size(U));
 U1_2 = zeros(size(U));
 
 for t = 1:ceil(T/dt)
-
-%% Euler scheme
-%q = qf(U,gamma,theta,dx);
-%U1(:,3:end-2) = U(:,3:end-2) - dt*q;
-%U1(:,[1 2 end-1 end]) = [1;-1;1].*U1(:,[4 3 end-2 end-3]);
 
 % SSP RK order 3
 q = qf(U,gamma,theta,dx);
@@ -93,12 +111,14 @@ c = speedofsound(U,gamma);
 
 % Loop
 U = U1;
-if sum(imag(P) > 0) >0 
+if sum(imag(c) > 0) >0 % in case of instability of the method, this criterion will stopes the loop
 break;
 end
-dlmwrite(['Results/sound/c',num2str(t),'.dat'],[x(3:end-2)' c(3:end-2)'],' ')
-dlmwrite(['Results/pressure/P',num2str(t),'.dat'],[x(3:end-2)' P'],' ')
-dlmwrite(['Results/velocity/v',num2str(t),'.dat'],[x(3:end-2)' v'],' ')
-dlmwrite(['Results/density/rho',num2str(t),'.dat'],[x(3:end-2)' rho'],' ')
-dlmwrite(['Results/energy/E',num2str(t),'.dat'],[x(3:end-2)' U(3,3:end-2)'],' ')
+
+dlmwrite(['../data/sound/',num2str(t),'.dat'],[x(3:end-2)' c(3:end-2)'],' ')
+dlmwrite(['../data/pressure/',num2str(t),'.dat'],[x(3:end-2)' P'],' ')
+dlmwrite(['../data/velocity/',num2str(t),'.dat'],[x(3:end-2)' v'],' ')
+dlmwrite(['../data/density/',num2str(t),'.dat'],[x(3:end-2)' rho'],' ')
+dlmwrite(['../data/energy/',num2str(t),'.dat'],[x(3:end-2)' U(3,3:end-2)'],' ')
 end
+end % end function

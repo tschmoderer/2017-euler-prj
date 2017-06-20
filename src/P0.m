@@ -1,8 +1,29 @@
-function y = P0(x)
-% smooth 
-%y = 1000*sin(2*pi*x).^2;
+%----------------------------------------------------------%
+%-- FUNCTION P0 --%
+%
+%	Compute the initial pressur on each nodes
+% The pressure is discontinuous in x=0.1 and 0.9
+% This is why we will get shock waves
+%
+%	In : 
+%			- x : the vector of nodes
+%
+% Out : 
+%			- y : the initial pressure on each nodes
+%
+%	TODO : 
+%			- A bit of optimization
+%
+%	Author : 
+% 	- Timothée Schmoderer
+%
+%   
+%		INSA de Rouen Normandie 2017	
+% 		Universität zu Köln 2017
+%		
+%----------------------------------------------------------%
 
-%% P discontinuous
+function y = P0(x)
 l = length(x); 
 for i = 1:l
 z = x(i);

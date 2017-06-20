@@ -37,10 +37,13 @@ You will find :
 
 ## Coming Soon 
 
-Computation for 800 & 1600 Nodes
-The method for non regular distribution of Nodes
-Maybe the routine in C
-A repport explaining all this work 
+ - Computation for 800 & 1600 Nodes
+ - The method for non regular distribution of Nodes
+ - Maybe the routine in C
+ - A repport explaining all this work 
+ 
+## Contact 
+If you nortice any problem or have any trouble with the program, please feel free to mail me : timothee.schmoderer -at- netcourrier.com . 
 
 ## Credits
 
@@ -51,3 +54,5 @@ This project was made in my fourth year at INSA ROUEN NORMANDIE (FRANCE) in the 
 This project was realize for the University of Cologne as a summer internship 
 
 2017
+
+

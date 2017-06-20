@@ -1,8 +1,32 @@
+%----------------------------------------------------------%
+%-- FUNCTION QF --%
+%
+% Compute the second memeber of the scheme, namely the approximation of the space derivative
+%
+%	In : 
+%	  	- U : vector of state
+%			- gamma : the constant of the gas 
+% 		- theta : the parameters for the minmod methods
+%			- dx : size of each computing cell
+%
+% Out : 
+%			- q : the approximation of the spatial derivation in each celle
+%
+%	Author : 
+% 	- Timothée Schmoderer
+%
+%   
+%		INSA de Rouen Normandie 2017	
+% 		Universität zu Köln 2017
+%		
+%----------------------------------------------------------%
+
 function q = qf(U,gamma,theta,dx)
 fU = f(U,gamma);
 c = speedofsound(U,gamma);
 a = abs(U(2,:)./U(1,:)) + c;
 
+% Compute f+ & f-
 fp = 0.5 * (fU + a.*U);
 fm = 0.5 * (fU - a.*U);
 

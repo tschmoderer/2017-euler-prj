@@ -1,3 +1,23 @@
+%----------------------------------------------------------%
+%-- FUNCTION MINMOD --%
+%
+% Compute the min mod value of three number
+%
+%	In : 
+%	  	- a,b,c : three array of the same size of number
+%
+% Out : 
+%			- y : an array of teh same size as a where each cell is the minmod value  of the same cell in a,b and c
+%
+%	Author : 
+% 	- Timothée Schmoderer
+%
+%   
+%		INSA de Rouen Normandie 2017	
+% 		Universität zu Köln 2017
+%		
+%----------------------------------------------------------%
+
 function y = minmod(a,b,c) 
 s = size(a);
 y = zeros(s);
