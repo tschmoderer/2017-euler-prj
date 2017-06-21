@@ -46,7 +46,7 @@ else
 f=120
 fi
 
-echo "Output framerat set to $f fps"
+echo "Output framerate set to $f fps"
 
 # Pre processing 
 if [ ! -d Results/$N\ Nodes ]; then 
