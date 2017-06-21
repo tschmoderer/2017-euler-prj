@@ -27,6 +27,8 @@ else
 N=$1
 fi
 
+echo "Number of nodes : $N"
+
 # Set framerate
 if [ $N -le 100 ]; then 
 f=60
@@ -43,6 +45,8 @@ f=170
 else 
 f=120
 fi
+
+echo "Output framerat set to $f fps"
 
 # Pre processing 
 if [ ! -d Results/$N\ Nodes ]; then 
@@ -73,11 +77,29 @@ else
 rm data/$dir/*
 fi
 done
+echo ""
+echo "#########################################################"
+echo "#                                                       #"
+echo "#                Processing main routine                #"
+echo "#    This could take several minutes, hours, days ..    #"
+echo "#          So please make yourself comfortable          #"
+echo "#                                                       #"
+echo "#########################################################"
+echo ""
 
 # Processing 
 cd src	
 octave --no-gui --eval "main_euler($N)" 
 cd ..
+
+echo ""
+echo "#########################################################"
+echo "#                                                       #"
+echo "#                  Processing Complete                  #"
+echo "#        We will now process the data you compute       #"
+echo "#                                                       #"
+echo "#########################################################"
+echo ""
 
 # All directories have the same number of elements
 nbFiles="$(ls data/velocity | grep dat | wc -l)"
@@ -112,7 +134,6 @@ yr=0:40
 titre="Speed of Sound"
 fi 
 
-
 rm img/$dir/*.png 
 files="$(ls -1v data/$dir)"
 
@@ -140,15 +161,29 @@ echo "$dir -- Plotting Done"
 echo ""
 
 ffmpeg  -framerate $f -i "img/$dir/%d.png"  Results/$N\ Nodes/$dir.gif -y
-mv data/dt.dat Results/$N\ Nodes/
+cp data/dt.dat Results/$N\ Nodes/
 mv img/initial_condition_$N\_Nodes.png Results/$N\ Nodes/
 done
+
+clear 
+
+
+
 
 tar -zcvf Results/$N\ Nodes/data_$N\_Nodes.tar.gz data/
 rm -r data/*
 rm -r img/*
 
-clear 
+clear
+
+echo ""
+echo "#########################################################"
+echo "#                                                       #"
+echo "#               Post-Processing Complete                #"
+echo "#       Results are available in Results/N Nodes        #"
+echo "#                                                       #"
+echo "#########################################################"
+echo ""
 
 echo "#########################################################"
 echo "#                                                       #"
@@ -159,7 +194,7 @@ echo "#                                                       #"
 echo "#                 Timothée Schmoderer                   #"
 echo "#         timothee.schmoderer-at-netcourrier.com        #"
 echo "#                                                       #"
-echo "#                  INSA Rouen Normandie                 #"
+echo "#             INSA Rouen Normandie - Dpt GM             #"
 echo "#                  Universität zu Köln                  #"
 echo "#                         2017                          #"
 echo "#                                                       #"
