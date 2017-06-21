@@ -38,6 +38,7 @@ You will find :
 ## Coming Soon 
 
  - Computation for 800 & 1600 Nodes
+ - A post processing script that will only process existing data
  - The method for non regular distribution of Nodes
  - Maybe the routine in C
  - A repport explaining all this work 
