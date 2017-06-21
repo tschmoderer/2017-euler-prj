@@ -134,7 +134,6 @@ yr=0:40
 titre="Speed of Sound"
 fi 
 
-rm img/$dir/*.png 
 files="$(ls -1v data/$dir)"
 
 echo "Processs $dir data"
@@ -161,14 +160,10 @@ echo "$dir -- Plotting Done"
 echo ""
 
 ffmpeg  -framerate $f -i "img/$dir/%d.png"  Results/$N\ Nodes/$dir.gif -y
-cp data/dt.dat Results/$N\ Nodes/
-mv img/initial_condition_$N\_Nodes.png Results/$N\ Nodes/
 done
 
-clear 
-
-
-
+cp data/dt.dat Results/$N\ Nodes/
+mv img/initial_condition_$N\_Nodes.png Results/$N\ Nodes/
 
 tar -zcvf Results/$N\ Nodes/data_$N\_Nodes.tar.gz data/
 rm -r data/*
