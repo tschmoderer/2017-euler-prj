@@ -28,6 +28,11 @@ N=$1
 fi
 
 # Pre processing 
+if [ ! -d "Results/$N\ Nodes" ]; then 
+mkdir Results/$N\ Nodes
+else
+rm Results/$N\ Nodes/*
+fi 
 
 
 #check if directories exists 
@@ -59,11 +64,7 @@ done
 # Processing 
 cd src	
 octave --no-gui --eval "main_euler($N)" 
-
 cd ..
-
-# Post Processing
-rm gif/*.gif
 
 # All directories have the same number of elements
 nbFiles="$(ls data/velocity | grep dat | wc -l)"
@@ -129,8 +130,13 @@ echo ""
 # 120 is ok from 200 to 400
 # 150 for 800 ?
 # 170 for 1600 ?
-ffmpeg  -framerate 120 -i "img/$dir/%d.png"  gif/$dir.gif -y
+ffmpeg  -framerate 120 -i "img/$dir/%d.png"  Results/$N\ Nodes/$dir.gif -y
+mv data/dt.dat Results/$N\ Nodes/
+mv img/initial_condition_$N\_Nodes.png Results/$N\ Nodes/
 done
+
+# Make something to clear repository after ? 
+# Idea --> make a script only for post treatement and save data in an archive 
 
 echo ""
 echo "Thank you for using this script"

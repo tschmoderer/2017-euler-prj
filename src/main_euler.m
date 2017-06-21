@@ -81,7 +81,7 @@ subplot(5,1,5),
 plot(x,E)
 title('Energy at t=0')
 
-print(['../img/initial_condition_',num2str(N),'_Nodes'],"-dpng");
+print(['../img/initial_condition_',num2str(N),'_Nodes.png'],"-dpng");
 close all;
 
 %%% Let's Go %%%
