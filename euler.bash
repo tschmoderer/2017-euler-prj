@@ -1,16 +1,16 @@
 #!/bin/bash
 clear 
+
 echo "#########################################################"
-echo "#														  #"
+echo "#                                                       #"
 echo "#                        Welcome                        #"
 echo "#   You are about to simulate a gas fluid a a 1D pipe   #"
-echo "#       All informations are available in README 		  #"
-echo "#														  #"
-echo "#					Timothée Schmoderer 				  #"
-echo "#							2017						  #"
-echo "#														  #"
+echo "#     All informations are available in README          #"
+echo "#                                                       #"
+echo "#                 Timothée Schmoderer                   #"
+echo "#                         2017                          #"
+echo "#                                                       #"
 echo "#########################################################"
-
 echo ""
 
 # Parameters 
@@ -25,6 +25,23 @@ if [[ ! $1 = +([0-9]) ]] ; then
 N=200 # non numérique --> valeur par défaut
 else 
 N=$1
+fi
+
+# Set framerate
+if [ $N -le 100 ]; then 
+f=60
+elif [ $N -le 200 ]; then 
+f=90
+elif [ $N -le 300 ]; then 
+f=110
+elif [ $N -le 400 ]; then 
+f=120
+elif [ $N -le 800 ]; then 
+f=150
+elif [ $N -le 1600 ]; then 
+f=170
+else 
+f=120
 fi
 
 # Pre processing 
@@ -121,19 +138,30 @@ EOF
 done
 echo "$dir -- Plotting Done"
 echo ""
-# You should maybe adjust the framerate in case of your choice of number of nodes
-# 60 for 100 
-# 120 is ok from 200 to 400
-# 150 for 800 ?
-# 170 for 1600 ?
-ffmpeg  -framerate 120 -i "img/$dir/%d.png"  Results/$N\ Nodes/$dir.gif -y
+
+ffmpeg  -framerate $f -i "img/$dir/%d.png"  Results/$N\ Nodes/$dir.gif -y
 mv data/dt.dat Results/$N\ Nodes/
 mv img/initial_condition_$N\_Nodes.png Results/$N\ Nodes/
 done
 
-# Make something to clear repository after ? 
-# Idea --> make a script only for post treatement and save data in an archive 
+tar -zcvf Results/$N\ Nodes/data_$N\_Nodes.tar.gz data/
+rm -r data/*
+rm -r img/*
 
-echo ""
-echo "Thank you for using this script"
+clear 
+
+echo "#########################################################"
+echo "#                                                       #"
+echo "#                        Bye :)                         #"
+echo "#             Thank you for using this script           #"
+echo "#     If any probems occured please let me know         #"
+echo "#                                                       #"
+echo "#                 Timothée Schmoderer                   #"
+echo "#         timothee.schmoderer-at-netcourrier.com        #"
+echo "#                                                       #"
+echo "#                  INSA Rouen Normandie                 #"
+echo "#                  Universität zu Köln                  #"
+echo "#                         2017                          #"
+echo "#                                                       #"
+echo "#########################################################"
 echo ""
