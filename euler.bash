@@ -91,7 +91,7 @@ echo ""
 
 # Processing 
 cd src	
-octave --no-gui --eval "main_euler($N)" 
+octave --no-gui --eval "main_euler_uniform($N)" 
 cd ..
 
 echo ""
