@@ -48,7 +48,7 @@ else
 f=120
 fi
 
-echo "Output framerate set to $f fps"
+echo "Output framerate : $f fps"
 
 # Pre processing 
 if [ ! -d Results/$N\ Nodes ]; then 
@@ -70,13 +70,13 @@ fi
 for dir in "${directory[@]}"; do 
 if [ ! -d img/$dir ]; then 
 mkdir img/$dir 
-else
-rm img/$dir/*
+#else
+#rm img/$dir/*
 fi
 if [ ! -d data/$dir ]; then 
 mkdir data/$dir
-else
-rm data/$dir/*
+#else
+#rm data/$dir/*
 fi
 done
 echo ""
