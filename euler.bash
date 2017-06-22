@@ -42,6 +42,8 @@ elif [ $N -le 800 ]; then
 f=150
 elif [ $N -le 1600 ]; then 
 f=170
+elif [ $N -le 3200 ]; then 
+f=200
 else 
 f=120
 fi
@@ -160,14 +162,18 @@ echo "$dir -- Plotting Done"
 echo ""
 
 ffmpeg  -framerate $f -i "img/$dir/%d.png"  Results/$N\ Nodes/$dir.gif -y
+# Save Memory space : 
+rm data/$dir/*
+rm img/$dir/*
 done
 
-cp data/dt.dat Results/$N\ Nodes/
+mv data/dt.dat Results/$N\ Nodes/
 mv img/initial_condition_$N\_Nodes.png Results/$N\ Nodes/
+mv img/chock_$N\_Nodes.png Results/$N\ Nodes/
 
-tar -zcvf Results/$N\ Nodes/data_$N\_Nodes.tar.gz data/
-rm -r data/*
-rm -r img/*
+#tar -zcvf Results/$N\ Nodes/data_$N\_Nodes.tar.gz data/
+#rm -r data/*
+#rm -r img/*
 
 clear
 

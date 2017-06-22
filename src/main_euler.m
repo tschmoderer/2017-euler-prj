@@ -35,8 +35,8 @@ T = 0.1;
 dx = (b-a)/N;
 x = [a-dx/2:dx:b+dx/2];
 x = [x(1)-dx,x,x(end)+dx];
-cfl = 2;
-dt = cfl*dx^2;
+cfl = 0.4*(1/23);
+dt = cfl*dx;
 dlmwrite('../data/dt.dat',dt);
 s = size(x);
 
@@ -113,6 +113,14 @@ c = speedofsound(U,gamma);
 U = U1;
 if sum(imag(c) > 0) >0 % in case of instability of the method, this criterion will stopes the loop
 break;
+end
+
+% Save chock case 
+if t*dt <= 0.38 && dt*(t+1) > 0.038
+plot(x(3:end-2),rho,'r');
+title(['rho,  t = ',num2str(t*dt)]);
+print(['../img/chock_',num2str(N),'_Nodes.png'],"-dpng");
+close all;
 end
 
 dlmwrite(['../data/sound/',num2str(t),'.dat'],[x(3:end-2)' c(3:end-2)'],' ')
