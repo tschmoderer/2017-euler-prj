@@ -1,8 +1,8 @@
 %----------------------------------------------------------%
-%-- FUNCTION MAIN_EULER_UNIFORM --%
+%-- FUNCTION MAIN_EULER_NON_UNIFORM --%
 % 
 %	Main routine of this project. 
-%
+% The Nodes Distribution will not be uniform
 %	In : 
 %			- N : interger specify the number of nodes
 % Out : 
@@ -23,7 +23,7 @@
 %		
 %----------------------------------------------------------%
 
-function main_euler_uniform(N)
+function main_euler_non_uniform(N)
 warning('off','all')
 
 % Constantes
@@ -32,11 +32,9 @@ b = 1;
 theta = 1.5;
 gamma = 1.4;
 T = 0.1;
-dx = (b-a)/N;
-x = [a-dx/2:dx:b+dx/2];
-x = [x(1)-dx,x,x(end)+dx];
+[x dx] = construct_nodes(a,b,N);
 cfl = 0.437/23;
-dt = cfl*dx;
+dt = cfl*min(dx);
 dlmwrite('../data/dt.dat',dt);
 s = size(x);
 niter = ceil(T/dt);
@@ -93,15 +91,15 @@ U1_2 = zeros(size(U));
 for t = 1:niter 
 
 % SSP RK order 3
-q = qf_uniform(U,gamma,theta,dx);
+q = qf_non_uniform(U,gamma,theta,dx);
 U1_1(:,3:end-2) = U(:,3:end-2) - dt*q;
 U1_1(:,[1 2 end-1 end]) = [1;-1;1].*U1_1(:,[4 3 end-2 end-3]);
 
-q1 = qf_uniform(U1_1,gamma,theta,dx);
+q1 = qf_non_uniform(U1_1,gamma,theta,dx);
 U1_2(:,3:end-2) = 0.75*U(:,3:end-2) + 0.25*U1_1(:,3:end-2) - 0.25*dt*q1;
 U1_2(:,[1 2 end-1 end]) = [1;-1;1].*U1_2(:,[4 3 end-2 end-3]);
 
-q2 = qf_uniform(U1_2,gamma,theta,dx);
+q2 = qf_non_uniform(U1_2,gamma,theta,dx);
 U1(:,3:end-2) = (1/3)*U(:,3:end-2) + (2/3)*U1_2(:,3:end-2) - (2/3)*dt*q2;
 U1(:,[1 2 end-1 end]) = [1;-1;1].*U1(:,[4 3 end-2 end-3]);
 
