@@ -30,16 +30,22 @@ You will find :
     - qf.m
     - speedofsound.m
   - In results : Gif animation I have already compute for 
-    - 100 Nodes
-    - 200 Nodes 
-    - 300 Nodes
-    - 400 Nodes
+  	- Uniform Nodes distribution
+     - 100 Nodes
+     - 200 Nodes 
+     - 300 Nodes
+     - 400 Nodes
+     - 800 Nodes
+     - 1600 Nodes
+     - 3200 Nodes 
+    - Non Uniform Nodes Distribution 
+     - 100 Nodes (equivalent 300 for the uniform case)
+     - 200 Nodes (equivalent 600 for the uniform case)
+     - 300 Nodes (equivalent 900 for the uniform case)
 
 ## Coming Soon 
 
- - Computation for 800 & 1600 Nodes
  - A post processing script that will only process existing data
- - The method for non regular distribution of Nodes
  - Maybe the routine in C
  - A repport explaining all this work 
  
