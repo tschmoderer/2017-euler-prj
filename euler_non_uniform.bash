@@ -32,6 +32,8 @@ echo "From 0 to 0.6 --> $N nodes"
 echo "From 0.6 to 0.8 --> $N nodes"
 echo "From 0.8 to 1 --> $N nodes"
 echo "Total Number of nodes : $(echo "3*$N" | bc)"
+echo "Time of computation equivalent of $(echo "5*$N" | bc) Nodes"
+echo ""
 
 # Set framerate
 if [ $N -le 100 ]; then 
@@ -93,6 +95,7 @@ echo ""
 cd src	
 octave --no-gui --eval "main_euler_non_uniform($N)" 
 cd ..
+
 
 echo ""
 echo "#########################################################"

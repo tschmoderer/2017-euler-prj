@@ -73,13 +73,67 @@ close all
 %%end
 
 
-%%% Error Analysis %%%
-r100 = dlmread(['../Results/Uniform/100 Nodes/chock_rho.dat'],' ',0,1);
-r200 = dlmread(['../Results/Uniform/200 Nodes/chock_rho.dat'],' ',0,1);
-r400 = dlmread(['../Results/Uniform/400 Nodes/chock_rho.dat'],' ',0,1);
-r800 = dlmread(['../Results/Uniform/800 Nodes/chock_rho.dat'],' ',0,1);
-r1600 = dlmread(['../Results/Uniform/1600 Nodes/chock_rho.dat'],' ',0,1);
-r3200 = dlmread(['../Results/Uniform/3200 Nodes/chock_rho.dat'],' ',0,1);
+%%% Error Analysis
+d100 = dlmread(['../Results/Uniform/100 Nodes/chock_rho.dat'],' ');
+d200 = dlmread(['../Results/Uniform/200 Nodes/chock_rho.dat'],' ');
+d400 = dlmread(['../Results/Uniform/400 Nodes/chock_rho.dat'],' ');
+d800 = dlmread(['../Results/Uniform/800 Nodes/chock_rho.dat'],' ');
+d1600 = dlmread(['../Results/Uniform/1600 Nodes/chock_rho.dat'],' ');
+d3200 = dlmread(['../Results/Uniform/3200 Nodes/chock_rho.dat'],' ');
+
+% A garder
+%figure; 
+%plot(d100(:,1)',d100(:,2)',d200(:,1)',d200(:,2)',d400(:,1)',d400(:,2)',d800(:,1)',d800(:,2)',d1600(:,1)',d1600(:,2)',d3200(:,1)',d3200(:,2)');
+%legend("100","200","400","800","1600","3200");
+
+% Error calcul
+
+% Case N=100
+r100 = d100(:,2)';
+r200 = d200(:,2)';
+r400 = d400(:,2)';
+
+% r100 - r200
+tmp = (r200(2:end)+r200(1:end-1))/2;
+n1 = tmp(1:2:end) - r100;
+%r200 - r400
+tmp = (r400(2:end) + r400(1:end-1))/2;
+n2 = tmp(1:2:end) - r200;
+
+error100_1 = log2(norm(n1,1)/norm(n2,1));
+error100_inf = log2(norm(n1,inf)/norm(n2,inf));
+
+% Case N=200
+r800 = d800(:,2)';
+
+%r400 - r800
+tmp = (r800(2:end)+r800(1:end-1))/2;
+n3 = tmp(1:2:end) - r400;
+
+error200_1 = log2(norm(n2,1)/norm(n3,1));
+error200_inf = log2(norm(n2,inf)/norm(n3,inf));
+%plot(d400(:,1)',r400,d400(:,1)',tmp(1:2:end),d400(:,1)',abs(n3));legend("original 400","interpolate 800","erreurs")
+
+% Case N=400
+r1600 = d1600(:,2)';
+
+%r800 - r1600
+tmp = (r1600(2:end) + r1600(1:end-1))/2;
+n4 = tmp(1:2:end) - r800;
+
+error400_1 = log2(norm(n3,1)/norm(n4,1));
+error400_inf = log2(norm(n3,inf)/norm(n4,inf));
+
+
+% r1600 - r3200
+r3200 = d3200(:,2)';
+tmp = (r3200(2:end) + r3200(1:end-1))/2;
+n5 = tmp(1:2:end) - r1600;
+
+
+
+
+
 
 
 
