@@ -87,6 +87,7 @@ Where :
 All this variable depends of time and space. The system (\ref{eq:EulerGasEquation}) is close by a fourth equation, an equation of state which bound pressure, density and energy : 
 \begin{boxeq}
 E = \frac{P}{\gamma -1} -\frac{\rho u^2}{2}
+\label{eq:equationOfState}
 \end{boxeq}
 Where $\gamma$ is some gas constant coming from adiabatic. It will be taken equal to : $1.4$. 
 
@@ -224,7 +225,50 @@ While presenting the scheme I haven't discuss on which nodes we have to applys t
 In order to achieve the method two ghosts point are needed on each side, with value dicted by the boundary conditions. 
 
 \section{Numerical Experiment for regular nodes distribution}
+\subsection{Data Representation}
+I hope no one is a purist mathematician beacause I will abuse with the "dot" notation of Matlab meaning point by point operation. Choosing Matlab for programming language was a logical first choice to do, because many operation are transparent in Matlab. However we should keep in mind that greater efficiency could be achieve with mor basic language. \\
+With a very natural way, the partial differential equation is describeb by a vector $U$ whose size is : 3 row times (N+4) colums. Why N+4 ? Because there is $N$ internal nodes and 2 ghost points on each sides. \\
+Thus in only on structure I could represent my system at time $t$.\\
+
+Let recall that with that structure we have information in the center of the cell and we want achieve information at cells interfaces.
+ 
 \subsection{Implementation}
+I will describe the code implementing the method in Matlab language\footnote{Actuaally, it will not works with matlab beacause I write it in Octave and this software is more tolerant. But minor changes will make it work with Matlab.}.\\
+First is teh function implementing the flux : $\begin{pmatrix}
+\rho u\\
+\rho u^2+P\\
+u(E+P)\\
+\end{pmatrix}$ Given the vector of state $U$ we can get easily $u$, $\rho$ and $E$ but we will need the adiabatic constant $\gamma$ to compute the pressure with the equation of state (\ref{eq:equationOfState}). Thus the flux is given by : 
+$$
+f(U) = U.*u + \begin{bmatrix}
+0\\
+P\\
+P.*u\\
+\end{bmatrix}
+$$
+
+
+\lstinputlisting[firstline=21,caption={Implementation of the flux function - f.m}]{../src/f.m}
+
+Second easy step is to compute the speed of the sound in the domain. Same argumentation leads us to compute density and pressure from the vector of state and the adiabatic constant. 
+
+\lstinputlisting[firstline=21,caption={Implementation of the computation of the speed of sound - speedofsound.m}]{../src/speedofsound.m}
+
+Another minor function is the one that construct the initial condition of pressure. 
+\lstinputlisting[firstline=26,caption={Implementation of the initial condition of pressure - P0.m}]{../src/P0.m}
+
+One important function in the reconstruction process in the $minmod$ function. This is maybe the function I am the less proud about because it is certainly not using the full power offers by the data structure and is strongly dependant of this particular case. 
+
+\lstinputlisting[firstline=21,caption={Implementation of the minmod function - minmod.m}]{../src/minmod.m}
+
+Finally the hearth of the method is contain in this last function file. Given $U$, the adiabatic constant, the minmod reconstruction constant and the mesh size, it will produce the second member in
+
+\lstinputlisting[firstline=25,caption={Implementation of the computation of the second member - qf\_ uniform.m}]{../src/qf_uniform.m}
+
+And least the main function is setting all the parameters for the study of this case and process the SSP Runge Kutta method. 
+
+\lstinputlisting[linerange={26-26,28-39,41-59,88-128,135-136},caption={Implementation of the main function - main\_ euler\_ uniform.m}]{../src/main_euler_uniform.m}
+
 \subsection{Results}
 \subsubsection{Euler vs Runge Kutta}
 \subsubsection{Rate of convergence}
