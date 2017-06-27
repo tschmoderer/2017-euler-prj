@@ -1,0 +1,265 @@
+\documentclass[a4paper,12pt]{article}
+
+\input{modele_cours_anglais.tex}
+
+\setlength{\parindent}{0pt}
+\newcommand\titre{Non regular Nodes method for Euler Gas Equation}
+\newcommand\auteur{Timothée \textsc{Schmoderer}}
+\newcommand\dateDoc{2017}
+\newcommand\chapitre{Chapitre 2}
+\newcommand\cours{Internship Repport}
+\usepackage{enumitem}
+\everymath{\displaystyle}
+
+\title{\titre }
+\author{\auteur}
+\date{\dateDoc}
+
+\usepackage{fancyhdr,lastpage}
+\pagestyle{fancy}
+
+\lhead{\cours}
+\chead{}
+\rhead{\currentname}
+\lfoot{\titre}
+\cfoot{}
+\rfoot{Page \thepage\ /\ \pageref*{LastPage}}  
+
+
+\lstset{
+language=Matlab,
+}
+
+\hypersetup {
+ pdftitle={\titre},    % title
+    pdfauthor={\auteur},     % author
+    pdfsubject={\cours},   % subject of the document
+    pdfkeywords={flot optique, Horn, schunck, image, projet}, % list of keywords
+}
+
+
+\renewcommand{\lstlistingname}{Code}% Listing -> Code
+\renewcommand{\lstlistlistingname}{List of \lstlistingname s}% List of Listings -> List of codes
+
+
+
+\begin{document}
+\thispagestyle{empty}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+
+\newpage
+
+\section{Euler Gas Equation}
+Let's begin with a brief introduction about the euler gas equations (\cite{wiki:EulerGasEquation}). These equations descibe fluid behaviour when we could consider that there is no viscosity. That is to say especially for gas. For a one dimensionnal system, the equations are written as follow : 
+
+\begin{boxeq}
+\frac{\partial}{\partial t} 
+\begin{pmatrix}
+\rho\\
+\rho u\\
+E
+\end{pmatrix}  +
+\frac{\partial}{\partial x}
+\begin{pmatrix}
+\rho u \\
+P + \rho u^2\\
+u(E+P)
+\end{pmatrix}
+=0
+\label{eq:EulerGasEquation}
+\end{boxeq}
+
+\paragraph{Convention :} This system illustrates a convention we will systematically make. The partial derivative are intends to act on each components of the vectors. \\
+\newline
+Where : 
+\begin{enumerate}
+\item $\rho$ stands for the density is strictly positive. 
+\item $P$ stands for the presure and is also strictly positive. 
+\item $E$ is the internal energy 
+\item $u$ is the gas velocity which could be either positive (if gas is moving toward increasing value in space) or negative.
+\end{enumerate}
+
+All this variable depends of time and space. The system (\ref{eq:EulerGasEquation}) is close by a fourth equation, an equation of state which bound pressure, density and energy : 
+\begin{boxeq}
+E = \frac{P}{\gamma -1} -\frac{\rho u^2}{2}
+\end{boxeq}
+Where $\gamma$ is some gas constant coming from adiabatic. It will be taken equal to : $1.4$. 
+
+We will also need to compute the speed of sound in the gas, this is givern by : 
+$$
+c = \sqrt{\frac{\gamma P}{\rho}}
+$$
+In general there is no analytic solution of this system, which will lead us to knew technique of convergence rate analysis. \\
+The system \ref{eq:EulerGasEquation} describe non linear hyberpolics partial differential equations. The difficulties is that even is the initial conditiosn are smooth, the solution could present discontinuities, or in a more physical vocabulary, chock waves. This is a major problem to construct numerical method to capture them. \\
+\newline
+To put the system \ref{eq:EulerGasEquation} is a more compact way, let $U=\begin{pmatrix}
+\rho\\
+\rho u\\
+E
+\end{pmatrix}$ be the state vector and $f(U)=\begin{pmatrix}
+\rho u \\
+P + \rho u^2\\
+u(E+P)
+\end{pmatrix}$ be the flux vector such as \ref{eq:EulerGasEquation} rewrite as : 
+$$
+\frac{\partial U}{\partial t}+ \frac{\partial f(U)}{\partial x} = 0
+$$
+
+
+\subsection{The problem}
+In this etud, the domain is taken to be : $\Omega=[0,1]$ and the time in $[0,0.1]$
+The problem is closed with proper boundary and initial conditions : 
+\begin{boxeq}
+\begin{split}
+u(0)=u(1)&=0\\
+\frac{\partial \rho}{\partial x} \bigg\rvert_{x=0,1} &=0\\
+\frac{\partial P}{\partial x} \bigg\rvert_{x=0,1} &=0\\
+u(x,0) &= 0 \quad \forall x\in \Omega\\
+\rho(x,0) &= 1 \quad \forall x\in \Omega\\
+P(x,0)&= \left\{ \begin{array}{ccc}
+1000 & \text{if  } 0<x<0.1\\
+0.01 & \text{if  } 0.1<x<0.9\\
+100 & \text{if  } 0.9<x<1\\
+\end{array} \right.
+\end{split}
+\label{eq:initialCondition}
+\end{boxeq}
+
+Which we can interpret as solid wall conditions on both extremities of the tubes. 
+
+\subsection{Expecting results}
+The initial condition suggests that at $t=0$ there is some kind of valves at $x= 0.1$ and $x=0.9$ that are oppened. After we can easy imagine that due to pressure the gas "want" to uniform his energy, so the left side will be moving to the right, the right side to the left. 
+But what happend when this two wave coliddes ?
+
+In fact due to the hyperbolic characteristics of the system \ref{eq:EulerGasEquation} we can expect chock waves. The numerical difficulties is to capture them. 
+
+\section{Numerical scheme}
+\subsection{General method for hyberbolic system}
+\subsubsection{Cells and Nodes}
+Choose a integer $N$ (obviously not null, we won't go far), and let divide $\Omega$ into $N$ grid "cells" (Figure \ref{fig:OmegaCells}), and let $x_i$ be the cell-centers. 
+\begin{figure}[!h]
+\centering
+\input{ggb/omega.tex}
+\caption{\label{fig:OmegaCells} Cells construction on $\Omega$ }
+\end{figure}
+A simple reasonnement will lead us to the main scheme. Let us integrate over one cell the partial derivative equation : 
+
+\begin{align*}
+\begin{split}
+\int_{x_{j-1/2}}^{x_{j+1/2}} \frac{\partial U}{\partial t} dx &= - \int_{x_{j-1/2}}^{x_{j+1/2}} \frac{\partial f(U)}{\partial x} dx\\
+\frac{d}{dt}\int_{x_{j-1/2}}^{x_{j+1/2}} U dx &= -\int_{x_{j-1/2}}^{x_{j+1/2}} \frac{\partial f(U)}{\partial x} dx\\
+\end{split}
+\end{align*}
+Here the magic appears, on left side we almost reconize the mean value of $U$ in the cell, and on the right side the computation is obvious since we integrate a space derivative with respect to space. Hence : 
+$$
+\Delta x \frac{d\bar{U}}{dt} = -(f(U(x_{j+1/2},t)) - f(U(x_{j-1/2},t)))
+$$
+Where $\bar{U}$ is the mean value of $U$ in the $j$ cell, and $\Delta x =\frac{1}{N}$ is the cell length. \\
+
+The difficulty that arrises is that we know the values of $U$ in the cell center by setting it to be the mean value of $U$ in the cell. However we need to have the values of $U$ at the cells interfaces in order to compute the right member. 
+
+\subsubsection{Reconstruction}
+In order to solve the precedent problem we have to "guess" the value of $U$ at the cell interfaces withe the knowledge of value in the center. The first possibility is to considet $U$ to be constant over each cell : 
+\begin{figure}[!h]
+\centering
+\input{ggb/interpolationConstant.tex}
+\caption{\label{fig:}}
+\end{figure}
+Thus another problem arise, we construct two value for $U$ at the cells interfaces, which pne we should choose ? \\
+Second possibility is to consider piecewise linear function between centers : 
+\begin{figure}[!h]
+\centering
+\input{ggb/interpolationLinear.tex}
+\caption{\label{fig:}}
+\end{figure}
+We solve the problem of multiple value at interfaces but we see that we would need a special treatement for the two extrems nodes. \\
+\newline
+In fact, there infinetly many ways to do this reconstruction procedure (with paraboloids, cubics, splines ...) so I will now focus on the scheme propose in the paper. 
+
+The Goal is to get the following equations : 
+\begin{boxeq}
+\frac{dU_j}{dt} = -\frac{\hat{f}_{j+1/2}-\hat{f}_{j-1/2}}{\Delta x} \qquad j=1,\ldots,N
+\end{boxeq}
+
+We compute the $\{\hat{f}_{j\pm 1/2}\}$ as follows : 
+\begin{enumerate}
+\item Compute the spectral radius of the jacobian at $x=x_j$. Analytics computation lead us to know that for compressible Euler equation it is : 
+$$
+a_j = |u_j| + c_j
+$$
+\item We split the flux function $f$ as : 
+$$
+f(U_j)=f^+_j+f^-_j \qquad f^{\pm}_j = \frac{1}{2}\left(f(U_j)\pm a_jU_j\right)
+$$
+\item We compute the slopes in each cells using the minmod function : 
+$$
+(f_x)^{\pm}_j = minmod\left(\theta\frac{f^{\pm}_{j}-f^{\pm}_{j-1}}{\Delta x}, \frac{f^{\pm}_{j+1}-f^{\pm}_{j-1}}{2\Delta x},\theta\frac{f^{\pm}_{j+1}-f^{\pm}_{j}}{\Delta x} \right)
+$$
+Where $\theta_in[1,2]$ is  aparameter that control te amount of numerical dissipation, larger values of $\theta$ typically lead to sharper resolution of discontinuities, but may cause some oscillations.\\
+The $minmod$ function is defined by : 
+$$
+minmod(a,b,c)=\left\{ \begin{array}{cl}
+\min(a,b,c) & \text{if } a>0,\ b>0\text{ and } c>0\\
+\max(a,b,c) & \text{if } a<0,\ b<0\text{ and } c<0\\
+0& \text{else}
+\end{array}\right.
+$$
+\item Construct $f^E$ and $f^W$ as : 
+$$
+f^E_j = f^+_j + \frac{\Delta x}{2}(f_x)^+_j \qquad f^W_j = f^-_j-\frac{\Delta x}{2}(f_x)^-_j
+$$
+\item Finally : 
+$$
+\hat{f}_{j+1/2} = f^E_j + f^W_{j+1} \quad \hat{f}_{j-1/2} = f^E_{j-1} + f^W_{j}
+$$
+\end{enumerate}
+
+\subsection{Boundary condition and Ghost Nodes}
+While presenting the scheme I haven't discuss on which nodes we have to applys the method. Obvioustly there is no probleme when we are in the middle of the domain problems arrises when we come close to the boundaries. \\
+In order to achieve the method two ghosts point are needed on each side, with value dicted by the boundary conditions. 
+
+\section{Numerical Experiment for regular nodes distribution}
+\subsection{Implementation}
+\subsection{Results}
+\subsubsection{Euler vs Runge Kutta}
+\subsubsection{Rate of convergence}
+\subsubsection{Chock capture}
+\subsubsection{Error and convergence}
+
+\section{Adaptation on non regular nodes distribution}
+
+
+
+
+
+
+
+\newpage 
+\section{Conclusion}
+
+
+\newpage
+
+
+
+\bibliographystyle{plain}
+
+\nocite{*}
+\bibliography{biblio.bib}
+\newpage
+\appendix
+
+
+\newpage
+\addcontentsline{toc}{section}{\listfigurename}
+\listoffigures
+\addcontentsline{toc}{section}{\lstlistlistingname}
+\lstlistoflistings
+
+
+\end{document}
