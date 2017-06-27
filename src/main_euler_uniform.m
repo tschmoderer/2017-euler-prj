@@ -117,10 +117,11 @@ break;
 end
 
 % Save chock case 
-if (t*dt == 0.038)
+if (t*dt <= 0.038 && dt*(t+1) > 0.038)
 plot(x(3:end-2),rho,'r');
 title(['rho,  t = ',num2str(t*dt)]);
 print(['../img/chock_',num2str(N),'_Nodes.png'],"-dpng");
+dlmwrite(['../Results/Uniform/',num2str(N),' Nodes/chock_rho.dat'],[rho'],' ')
 end
 if (t*dt > 0.045)
 close all;

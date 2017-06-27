@@ -45,7 +45,7 @@ f=170
 elif [ $N -le 3200 ]; then 
 f=200
 else 
-f=120
+f=250
 fi
 
 echo "Output framerate : $f fps"
