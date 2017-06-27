@@ -4,6 +4,10 @@ data/*
 img/*
 gif/*
 
+Report/img/*
+Report/ggb/*
+Report/*.tex
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
