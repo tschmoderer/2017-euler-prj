@@ -72,7 +72,7 @@ title('Presure at t=0')
 
 subplot(5,1,3), 
 plot(x,v)
-title('velocity at t=0')
+title('Velocity at t=0')
 
 subplot(5,1,4), 
 plot(x,rho)
