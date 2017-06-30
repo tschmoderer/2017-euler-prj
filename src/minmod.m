@@ -19,21 +19,11 @@
 %----------------------------------------------------------%
 
 function y = minmod(a,b,c) 
-s = size(a);
-y = zeros(s);
-for i=1:s(1)
-for j = 1:s(2)
-% limit data access
-tmpa = a(i,j);
-tmpb = b(i,j);
-tmpc = c(i,j);
-if tmpa > 0 && tmpb > 0 && tmpc > 0
-y(i,j) = min([tmpa,tmpb,tmpc]);
-elseif tmpa < 0 && tmpb < 0 && tmpc < 0
-y(i,j) = max([tmpa,tmpb,tmpc]);
-else
-y(i,j) = 0;
-end
-end
-end
+	y = zeros(size(a));
+	% Index where the three numbers are positive
+	iM = find(a > 0 & b > 0 & c > 0);
+	y(iM) = min(min(a(iM),b(iM)),c(iM));
+	% Index where the three numbers are negative
+	im = find(a < 0 & b < 0 & c < 0);
+	y(im) = max(max(a(im),b(im)),c(im));
 end

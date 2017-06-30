@@ -13,6 +13,7 @@
 %
 %	TODO : 
 %			- A bit of optimization
+%			- It is short but we can do better with a loop
 %
 %	Author : 
 % 	- Timothée Schmoderer
@@ -24,17 +25,8 @@
 %----------------------------------------------------------%
 
 function y = P0(x)
-l = length(x); 
-for i = 1:l
-z = x(i);
-if 0 < z && z < 0.1
-y(i) = 10^3;
-elseif 0.1 < z && z < 0.9
-y(i) = 10^-2;
-elseif 0.9 < z && z < 1
-y(i) = 10^2;
-else 
-y(i) = 0;
-end
-end
+	y = zeros(size(x));
+	y(find(0.0 < x & x < 0.1)) = 1000;
+	y(find(0.1 < x & x < 0.9)) = 0.01;
+	y(find(0.9 < x & x < 1.0)) = 100;
 end
