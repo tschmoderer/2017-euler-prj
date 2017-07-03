@@ -22,7 +22,7 @@
 %		
 %----------------------------------------------------------%
 
-function q = qf_uniform(U,gamma,theta,dx)
+function [q dt] = qf_uniform(U,gamma,theta,dx,cfl)
 	fU = f(U,gamma);
 	c = speedofsound(U,gamma);
 	a = abs(U(2,:)./U(1,:)) + c;
@@ -54,4 +54,5 @@ function q = qf_uniform(U,gamma,theta,dx)
 
 	% Compute second member 
 	q = (fphalf - fmhalf)/dx;
+	dt = cfl*dx/max(a);
 end
