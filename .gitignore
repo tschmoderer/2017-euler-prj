@@ -9,6 +9,8 @@ Report/ggb/*
 Report/*.tex
 Report/*.bib
 
+src/octave-workspace
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof

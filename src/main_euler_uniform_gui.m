@@ -4,9 +4,9 @@ clear all
 close all
 
 % Initialsation
-N = 400;
-T = 0.1;
-data = initial(N,T,"riemann","wall");
+N = 1000;
+T = 5;
+data = initial(N,T,"sedov");
 
 dx = data.dx;
 theta = data.theta;
@@ -16,6 +16,38 @@ cfl = data.cfl;
 x = data.x;
 bound = data.bound;
 
+rho = U(1,3:end-2);
+v = U(2,3:end-2)./rho;
+P = (gamma-1)*(U(3,3:end-2) - 0.5*rho.*v.*v);
+E = U(3,3:end-2);
+
+figure;
+subplot(5,1,1),
+plot(x,zeros(size(x)),'*')
+line([data.a data.a],[0 1],'Color','blue')
+line([data.b data.b],[0 1],'Color','blue')
+line([data.a data.b],[0 0],'Color','red')
+ylim([0 0.5])
+title('Discretization of Omega')
+
+subplot(5,1,2), 
+plot(x,P)
+title('Presure at t=0')
+
+subplot(5,1,3), 
+plot(x,v)
+title('Velocity at t=0')
+
+subplot(5,1,4), 
+plot(x,rho)
+title('Density at t=0')
+
+subplot(5,1,5), 
+plot(x,E)
+title('Energy at t=0')
+
+close all;
+
 % U at the next time step
 U1 = zeros(size(U));
 % Reserve memory space for the RK method
@@ -24,7 +56,12 @@ U1_2 = zeros(size(U));
 
 t = 0;
 dt = 0;
+
 while t*dt < T
+%	% Euler 
+%	[q dt] = qf_uniform(U,gamma,theta,dx,cfl);
+%	U1(:,3:end-2) = U(:,3:end-2) - dt*q;
+%	U1 = boundary(U1,bound);
 
 	% SSP RK order 3
 	[q dt] = qf_uniform(U,gamma,theta,dx,cfl);
@@ -39,6 +76,7 @@ while t*dt < T
 	U1(:,3:end-2) = (1/3)*U(:,3:end-2) + (2/3)*U1_2(:,3:end-2) - (2/3)*dt*q2;
 	U1 = boundary(U1,bound);
 
+	% All the quantiies we are interested in
 	rho = U(1,3:end-2);
 	v = U(2,3:end-2)./rho;
 	P = (gamma-1)*(U(3,3:end-2) - 0.5*rho.*v.*v);
@@ -51,10 +89,10 @@ while t*dt < T
 	if sum(imag(c) > 0) > 0 % in case of instability of the method, this criterion will stop the loop
 		break;
 	end
-	
+
 	plot(x,rho,'r');
+	axis([data.a data.b]);
 	title(['rho,  t = ',num2str(t*dt)]);
 	drawnow
-	
 	t++;
 end
