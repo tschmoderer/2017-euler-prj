@@ -46,14 +46,6 @@ Nodes[0]=100
 #Nodes[5]=3200
 #Nodes[6]=6400
 
-frames[0]=60
-frames[1]=90
-frames[2]=110
-frames[3]=120
-frames[4]=150
-frames[5]=170
-frames[6]=200
-
 k=0;
 for essay in "${trial[@]}"; do 
 outputDir=Results/Uniform/"${dirResults[$k]}"
@@ -165,7 +157,9 @@ done
 echo "$dir -- Plotting Done"
 echo ""
 
-ffmpeg  -framerate ${frames[$k]} -i "${output}/img/${dir}/%d.png"  "${output}"/"${dir}".gif -y
+ffmpeg  -framerate 50 -stream_loop -1 -i "${output}/img/${dir}/%d.png"  "${output}"/"${dir}".mp4 -y
+
+ffmpeg  -framerate 50 -i "${output}/img/${dir}/%d.png"  "${output}"/"${dir}".gif -y
 
 # Save Memory space : 
 tar -zcvf "${output}"/data/$dir.tar.gz --directory="${output}"/data/$dir .
@@ -176,10 +170,34 @@ done
 
 mv "${output}"/data/time.dat "${output}"
 
+echo ""
+echo "#########################################################"
+echo "#                                                       #"
+echo "#               Post-Processing Complete                #"
+echo "#       Results are available in Results/Uniform/       #"
+echo "#                                                       #"
+echo "#########################################################"
+echo ""
+
 
 done
 ((k++))
 done
 
+echo "#########################################################"
+echo "#                                                       #"
+echo "#                        Bye :)                         #"
+echo "#             Thank you for using this script           #"
+echo "#     If any probems occured please let me know         #"
+echo "#                                                       #"
+echo "#                 Timothée Schmoderer                   #"
+echo "#         timothee.schmoderer-at-netcourrier.com        #"
+echo "#                                                       #"
+echo "#             INSA Rouen Normandie - Dpt GM             #"
+echo "#                  Universität zu Köln                  #"
+echo "#                         2017                          #"
+echo "#                                                       #"
+echo "#########################################################"
+echo ""
 
 
