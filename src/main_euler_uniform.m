@@ -38,7 +38,7 @@ function main_euler_uniform(N,trial)
 	U = data.U;
 	cfl = 0.5*data.cfl;
 	x = data.x;
-	T = data.tshock * 10;
+	T = data.tshock * 2;
 	bound = data.bound;
 
 	rho = U(1,3:end-2);
