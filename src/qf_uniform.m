@@ -22,7 +22,7 @@
 %		
 %----------------------------------------------------------%
 
-function [q dt] = qf_uniform(U,gamma,theta,dx,cfl)
+function [q, dt] = qf_uniform(U,gamma,theta,dx,cfl)
 	fU = f(U,gamma);
 	c = speedofsound(U,gamma);
 	a = abs(U(2,:)./U(1,:)) + c;

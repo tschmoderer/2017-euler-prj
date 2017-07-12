@@ -23,66 +23,84 @@
 %		
 %----------------------------------------------------------%
 
-function main_euler_uniform(N)
-warning('off','all')
+function main_euler_uniform(N,trial)
+	warning('off','all')
+	clc
+	close all
 
-	% Constantes
-	a = 0;
-	b = 1;
-	theta = 1.5;
-	gamma = 1.4;
-	T = 0.1;
-	dx = (b-a)/N;
-	x = [a-dx/2:dx:b+dx/2];
-	x = [x(1)-dx,x,x(end)+dx];
-	cfl = 0.437/23;
-	dt = cfl*dx;
-	dlmwrite('../data/dt.dat',dt);
-	s = size(x);
-	niter = ceil(T/dt);
+	% Initialsation
+	T = 0;
+	data = initial(N,T,trial);
 
-	% Initialisation in Omega at t=0
-	tmprho = ones(1,s(2)-4);
-	tmpv = zeros(1,s(2)-4); 
-	tmpP = P0(x(3:end-2));
-	
-	% Apply boundary condition to fill the ghost cells
-	rho = [tmprho(2),tmprho(1),tmprho,tmprho(end), tmprho(end-1)];
-	v = [-tmpv(2),-tmpv(1),tmpv,-tmpv(end),-tmpv(end-1)];
-	P = [tmpP(2),tmpP(1),tmpP,tmpP(end),tmpP(end-1)];
-	E = P/(gamma-1) + 0.5*rho.*v.*v;
-	
-	clear tmpP tmprho tmpv
-	
-	% Construction of the vector of state
-	U = [rho;rho.*v;E];
+	dx = data.dx;
+	theta = data.theta;
+	gamma = data.gamma;
+	U = data.U;
+	cfl = 0.5*data.cfl;
+	x = data.x;
+	T = data.tshock * 10;
+	bound = data.bound;
 
-	figure;
-	subplot(5,1,1),
-	plot(x,zeros(s),'*')
-	line([a a],[0 1],'Color','blue')
-	line([b b],[0 1],'Color','blue')
-	line([a b],[0 0],'Color','red')
-	ylim([0 0.5])
-	title('Discretization of Omega')
+	rho = U(1,3:end-2);
+	v = U(2,3:end-2)./rho;
+	P = (gamma-1)*(U(3,3:end-2) - 0.5*rho.*v.*v);
+	c = speedofsound(U(:,3:end-2),gamma);
+	E = U(3,3:end-2);
+	M = v./c;
 
-	subplot(5,1,2), 
-	plot(x,P)
-	title('Presure at t=0')
+	fO = figure('visible','off');
+	 plot(x,zeros(size(x)),'*')
+	 line([data.a data.a],[0 1],'Color','blue')
+	 line([data.b data.b],[0 1],'Color','blue')
+	 line([data.a data.b],[0 0],'Color','red')
+	 ylim([0 0.5])
+	 title('Discretization of Omega')
 
-	subplot(5,1,3), 
-	plot(x,v)
-	title('Velocity at t=0')
+	fP = figure('visible','off');
+		plot(x,P)
+		xlabel('x')
+		ylabel('P')
+		title('Presure at t = 0')
 
-	subplot(5,1,4), 
-	plot(x,rho)
-	title('Density at t=0')
+	fv = figure('visible','off');
+		plot(x,v)
+		xlabel('x')
+		ylabel('u')
+		title('Velocity at t = 0')
 
-	subplot(5,1,5), 
-	plot(x,E)
-	title('Energy at t=0')
+	fr = figure('visible','off');
+		plot(x,rho)
+		xlabel('x')
+		ylabel('rho')
+		title('Density at t = 0')
 
-	print(['../img/initial_condition_',num2str(N),'_Nodes.png'],"-dpng");
+	fE = figure('visible','off');
+		plot(x,E)
+		xlabel('x')
+		ylabel('E')
+		title('Energy at t = 0')
+
+	fc = figure('visible','off');
+		plot(x,c)
+		xlabel('x')
+		ylabel('c')
+		title('Speed of sound at t = 0')
+		
+	fM = figure('visible','off');
+		plot(x,M)
+		xlabel('x')
+		ylabel('M')
+		title('Mach number at t = 0')
+		
+	output = ['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/initial/initial_',trial];
+	print(fO,[output,'_omega.png'],'-dpng');
+	print(fP,[output,'_pressure.png'],'-dpng');
+	print(fv,[output,'_velocity.png'],'-dpng');
+	print(fr,[output,'_density.png'],'-dpng');
+	print(fE,[output,'_energy.png'],'-dpng');
+	print(fc,[output,'_sound.png'],'-dpng');
+	print(fM,[output,'_mach.png'],'-dpng');
+
 	close all;
 
 	% U at the next time step
@@ -91,48 +109,114 @@ warning('off','all')
 	U1_1 = zeros(size(U));
 	U1_2 = zeros(size(U));
 
-	for t = 1:niter 
+	dt = 0;
+	time = 0;
+	k = 0;
+
+	while time < T
+	% 	% Euler 
+	% 	[q, dt] = qf_uniform(U,gamma,theta,dx,cfl);
+	% 	U1(:,3:end-2) = U(:,3:end-2) - dt*q;
+	% 	U1 = boundary(U1,bound);
 
 		% SSP RK order 3
-		q = qf_uniform(U,gamma,theta,dx);
+		[q, dt] = qf_uniform(U,gamma,theta,dx,cfl);
 		U1_1(:,3:end-2) = U(:,3:end-2) - dt*q;
-		U1_1(:,[1 2 end-1 end]) = [1;-1;1].*U1_1(:,[4 3 end-2 end-3]);
+		U1_1 = boundary(U1_1,bound);
 
-		q1 = qf_uniform(U1_1,gamma,theta,dx);
+		[q1] = qf_uniform(U1_1,gamma,theta,dx,cfl);
 		U1_2(:,3:end-2) = 0.75*U(:,3:end-2) + 0.25*U1_1(:,3:end-2) - 0.25*dt*q1;
-		U1_2(:,[1 2 end-1 end]) = [1;-1;1].*U1_2(:,[4 3 end-2 end-3]);
+		U1_2 = boundary(U1_2,bound);
 
-		q2 = qf_uniform(U1_2,gamma,theta,dx);
+		[q2] = qf_uniform(U1_2,gamma,theta,dx,cfl);
 		U1(:,3:end-2) = (1/3)*U(:,3:end-2) + (2/3)*U1_2(:,3:end-2) - (2/3)*dt*q2;
-		U1(:,[1 2 end-1 end]) = [1;-1;1].*U1(:,[4 3 end-2 end-3]);
+		U1 = boundary(U1,bound);
 
+		% All the quantities we are interested in
 		rho = U(1,3:end-2);
 		v = U(2,3:end-2)./rho;
 		P = (gamma-1)*(U(3,3:end-2) - 0.5*rho.*v.*v);
-		c = speedofsound(U,gamma);
+		c = speedofsound(U(:,3:end-2),gamma);
+		E = U(3,3:end-2);
+		M = v./c;
 
 		% Loop
 		U = U1;
-	
-		if sum(imag(c) > 0) >0 % in case of instability of the method, this criterion will stop the loop
+
+		if sum(imag(c) > 0) > 0 % in case of instability of the method, this criterion will stop the loop
 			break;
 		end
+		
+		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/time.dat'],time,' ',"-append");
+		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/density/',num2str(k),'.dat'],[x' rho'],' ');
+		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/velocity/',num2str(k),'.dat'],[x' v'],' ');
+		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/pressure/',num2str(k),'.dat'],[x' P'],' ');
+		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/energy/',num2str(k),'.dat'],[x' E'],' ');
+		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/mach/',num2str(k),'.dat'],[x' M'],' ');
+		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/sound/',num2str(k),'.dat'],[x' c'],' ');
+%		plot(x,rho,'b');
+%		axis([data.a data.b 0 inf]);
+%		xlabel('x')
+%		ylabel('rho')
+%		title(['Density',data.title,num2str(time)]);
+%		drawnow
+		 
+			
+		if time < data.tshock & time + dt > data.tshock
+			fr = figure('visible','off');
+			plot(x,rho,'b');
+			axis([data.a data.b 0 inf]);
+			xlabel('x')
+			ylabel('rho')
+			title(['Density',data.title,num2str(time)]);
+			
+			fu = figure('visible','off');
+			plot(x,v,'b');
+			axis([data.a data.b 0 inf]);
+			xlabel('x')
+			ylabel('u')
+			title(['Velocity',data.title,num2str(time)]);
+		
+			fP = figure('visible','off');
+			plot(x,P,'b');
+			axis([data.a data.b 0 inf]);
+			xlabel('x')
+			ylabel('P')
+			title(['Pressure',data.title,num2str(time)]);
 
-		% Save chock case 
-		if (t*dt <= 0.038 && dt*(t+1) > 0.038)
-		plot(x(3:end-2),rho,'r');
-		title(['rho,  t = ',num2str(t*dt)]);
-		print(['../img/chock_',num2str(N),'_Nodes.png'],"-dpng");
-		dlmwrite(['../Results/Uniform/',num2str(N),' Nodes/chock_rho.dat'],[rho'],' ')
-		end
-		if (t*dt > 0.045)
-		close all;
+			fE = figure('visible','off');
+			plot(x,E,'b');
+			axis([data.a data.b 0 inf]);
+			xlabel('x')
+			ylabel('E')
+			title(['Energy',data.title,num2str(time)]);	
+
+			fM = figure('visible','off');
+			plot(x,M,'b');
+			axis([data.a data.b 0 inf]);
+			xlabel('x')
+			ylabel('M')
+			title(['Mach number',data.title,num2str(time)]);		
+
+			fc = figure('visible','off');
+			plot(x,c,'b');
+			axis([data.a data.b 0 inf]);
+			xlabel('x')
+			ylabel('c')
+			title(['Speed of sound',data.title,num2str(time)]);	
+			drawnow
+		
+			output = ['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/shock/shock_'];
+			print(fP,[output,'_pressure.png'],'-dpng');
+			print(fu,[output,'_velocity.png'],'-dpng');
+			print(fr,[output,'_density.png'],'-dpng');
+			print(fE,[output,'_energy.png'],'-dpng');
+			print(fc,[output,'_sound.png'],'-dpng');
+			print(fM,[output,'_mach.png'],'-dpng');
+			close all
 		end
 
-		dlmwrite(['../data/sound/',num2str(t),'.dat'],[x(3:end-2)' c(3:end-2)'],' ')
-		dlmwrite(['../data/pressure/',num2str(t),'.dat'],[x(3:end-2)' P'],' ')
-		dlmwrite(['../data/velocity/',num2str(t),'.dat'],[x(3:end-2)' v'],' ')
-		dlmwrite(['../data/density/',num2str(t),'.dat'],[x(3:end-2)' rho'],' ')
-		dlmwrite(['../data/energy/',num2str(t),'.dat'],[x(3:end-2)' U(3,3:end-2)'],' ')
+		time = time + dt;
+		k++;
 	end
-end % end function
+end

@@ -21,6 +21,8 @@ switch initial
 		rho0(find(0.5 < data.x & data.x <= 1.0)) = 0.125;
 		v0 = zeros(1,length(data.x));
 		data.bound = 'wall';
+		data.title = ' for the Sod''s shock tube at t = ';
+		data.dirRes = 'Sod';
 		data.tshock = 0.20;
 		
 	case 'blast'
@@ -31,14 +33,9 @@ switch initial
 		rho0 = ones(1,length(data.x));
 		v0 = zeros(1,length(data.x)); 
 		data.bound = 'wall';
-		data.tshock = 0.038
-
-	case 'plain'
-		P0 = ones(size(data.x));
-		rho0 = 1 + 0.2*sin(data.x);
-		v0 = ones(size(data.x));
-		data.bound = 'periodic';
-		data.tshock = 2.0;
+		data.title = ' for the blast wave at t = ';
+		data.dirRes = 'Blast';
+		data.tshock = 0.038;
 		
 	case 'lax'
 		P0 = zeros(size(data.x));
@@ -51,6 +48,8 @@ switch initial
 		v0(find(0.0 < data.x & data.x < 0.5)) = 0.698;
 		v0(find(0.5 <= data.x & data.x < 1)) = 0.0;	
 		data.bound = 'wall';
+		data.title = ' for the Lax shock at t = ';
+		data.dirRes = 'Lax';
 		data.tshock = 0.16;
 		
 	case 'toro'
@@ -64,12 +63,14 @@ switch initial
 		rho0 = zeros(size(data.x));
 		v0 = zeros(size(data.x));
 		rho0(find(-5 <= data.x & data.x < -4)) = 3.8557143;
-		rho0(find(-4 <= data.x & data.x <= 5)) = 1+0.2*sin(5*data.x(find(-4 <= data.x & data.x <= 5)));
+		rho0(find(-4 <= data.x & data.x <= 5)) = 1+0.2*sin(5*data.x(find(-4 <= data.x & data.x <= 5)))-0.2*sin(10*data.x(find(-4 <= data.x & data.x <= 5)));
 		P0(find(-5 <= data.x & data.x < -4)) = 31/3;
 		P0(find(-4 <= data.x & data.x <= 5)) = 1.0;
 		v0(find(-5 <= data.x & data.x < -4)) = 2.629369;
 		v0(find(-4 <= data.x & data.x <= 5)) = 0.0;		
 		data.bound = 'in-out-toro';
+		data.title = ' for the variation of the Shu-Osher problem at t = ';
+		data.dirRes = 'Toro';
 		data.tshock = 1.8;
 	
 	case 'shu'
@@ -83,6 +84,8 @@ switch initial
 		v0(find(0 < data.x & data.x < 0.125)) = 2.629369;
 		v0(find(0.125 <= data.x & data.x < 1)) = 0.0;		
 		data.bound = 'in-out-shu';	
+		data.title = ' for the Shu-Osher problem at t = ';
+		data.dirRes = 'Shu-Osher';
 		data.tshock = 0.178;
 	
 	case 'sedov'
@@ -90,10 +93,12 @@ switch initial
 		c = (data.a + data.b)/2;
 		P0 = 10^(-5)*ones(size(data.x));
 		idx = find(c-r < data.x & data.x < c+r);
-		P0(idx) = (data.gamma)*ones(size(idx));
+		P0(idx) = ones(size(idx));
 		rho0 = ones(size(data.x));
 		v0 = zeros(size(data.x));
 		data.bound = 'wall';
+		data.title = ' for the Sedov explosion at t = ';
+		data.dirRes = 'Sedov';
 		data.tshock = 0.050;
 		
 	case 'error_1'

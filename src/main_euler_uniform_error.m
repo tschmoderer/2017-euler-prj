@@ -4,14 +4,15 @@ clear all
 close all 
 
 % Initialsation
-N = [100 200 400 800 1600 3200 6400];
+N = [100:200:22000];
 T = 0.1;
 niter = 1000;
 tmp = zeros(1,length(N));
-error = "error_2";
+error = 'error_2';
 i = 1;
 for n=N
-data = initial(n,T,error,"periodic");
+tic;
+data = initial(n,T,error);
 dx = data.dx;
 theta = data.theta;
 gamma = data.gamma;
@@ -29,7 +30,7 @@ U1_2 = zeros(size(U));
 t = 0;
 dt = dx/55;
 
-while t < niter
+while t/dt < niter
 	% SSP RK order 3
 	q = qf_uniform(U,gamma,theta,dx,cfl) - source(U,gamma,error);
 	U1_1(:,3:end-2) = U(:,3:end-2) - dt*q;
@@ -44,27 +45,21 @@ while t < niter
 	U1 = boundary(U1,bound);
 
 	rho = U(1,3:end-2);
-	v = U(2,3:end-2)./rho;
-	P = (gamma-1)*(U(3,3:end-2) - 0.5*rho.*v.*v);
-	c = speedofsound(U,gamma);
 
 	% Loop
 	U = U1;
-
-	if sum(imag(c) > 0) > 0 % in case of instability of the method, this criterion will stop the loop
-		break;
-	end
 	
-	t++;
+	t = t + dt;
 end
 genvarname(['rho',num2str(n)]);
 genvarname(['rhoEx',num2str(n)]);
 genvarname(['e',num2str(n)]);
 eval(['rho' num2str(n) '= rho;']);
-eval(['rhoEx' num2str(n) '= rhoEx(x,(t-1)*dt,gamma,error);']);
-eval(['e' num2str(n) '= norm(rho',num2str(n),'-rhoEx',num2str(n),',1);']);
+eval(['rhoEx' num2str(n) '= rhoEx(x,t-dt,error);']);
+eval(['e', num2str(n), '= norm(rho',num2str(n),' - rhoEx',num2str(n),',1);']);
 eval(['taberr(i) = e' num2str(n) ';']);
-i++;
+eval('time(i) = toc;');
+i = i+1;
 end
 
 figure;
@@ -78,5 +73,4 @@ plot(x,-2*x,'g');
 legend('Error',['log(err) = ',num2str(p(1)),' * log(N) + ',num2str(p(2))],'Theoric : log(err) = -2*log(N)');
 title('Error analysis for case 2');
 
-taberr
-
+time
