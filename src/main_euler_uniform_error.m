@@ -5,11 +5,10 @@ close all
 
 % Initialsation
 N = [100:200:22000];
-N = 100:200:1000;
 T = 0.1;
 niter = 1000;
 tmp = zeros(1,length(N));
-error = 'error_2';
+error = 'error_1';
 i = 1;
 for n=N
 tic;
@@ -52,6 +51,7 @@ while t/dt < niter
 	
 	t = t + dt;
 end
+eval('time(i) = toc;');
 genvarname(['rho',num2str(n)]);
 genvarname(['rhoEx',num2str(n)]);
 genvarname(['e',num2str(n)]);
@@ -63,19 +63,45 @@ eval(['e2_', num2str(n), '= norm(rho',num2str(n),' - rhoEx',num2str(n),',2);']);
 eval(['taberr2(i) = e2_' num2str(n) ';']);
 eval(['eInf_', num2str(n), '= norm(rho',num2str(n),' - rhoEx',num2str(n),',inf);']);
 eval(['taberrInf(i) = eInf_' num2str(n) ';']);
-eval('time(i) = toc;');
 i = i+1;
 end
 
 figure;
-plot(log(N),log(taberr),'*');
-p=polyfit(log(N),log(taberr),1);
+plot(log(N),log(taberr1),'*');
+p=polyfit(log(N),log(taberr1),1);
 x = linspace(4,10,1000);
 y = polyval(p,x);
 hold on 
 plot(x,y,'r');
 plot(x,-2*x,'g');
+hold off
 legend('Error',['log(err) = ',num2str(p(1)),' * log(N) + ',num2str(p(2))],'Theoric : log(err) = -2*log(N)');
-title('Error analysis for case 2');
+title('Error analysis of case 1 for the L1 norm');
+
+figure;
+plot(log(N),log(taberr2),'*');
+p=polyfit(log(N),log(taberr2),1);
+x = linspace(4,10,1000);
+y = polyval(p,x);
+hold on 
+plot(x,y,'r');
+plot(x,-2*x,'g');
+hold off
+legend('Error',['log(err) = ',num2str(p(1)),' * log(N) + ',num2str(p(2))],'Theoric : log(err) = -2*log(N)');
+title('Error analysis of case 1 for the L2 norm');
+
+figure;
+plot(log(N),log(taberrInf),'*');
+p=polyfit(log(N),log(taberrInf),1);
+x = linspace(4,10,1000);
+y = polyval(p,x);
+hold on 
+plot(x,y,'r');
+plot(x,-2*x,'g');
+hold off
+legend('Error',['log(err) = ',num2str(p(1)),' * log(N) + ',num2str(p(2))],'Theoric : log(err) = -2*log(N)');
+title('Error analysis of case 1 for the LInf norm');
+
+
 
 time
