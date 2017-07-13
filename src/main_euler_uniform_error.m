@@ -5,6 +5,7 @@ close all
 
 % Initialsation
 N = [100:200:22000];
+N = 100:200:1000;
 T = 0.1;
 niter = 1000;
 tmp = zeros(1,length(N));
@@ -56,8 +57,12 @@ genvarname(['rhoEx',num2str(n)]);
 genvarname(['e',num2str(n)]);
 eval(['rho' num2str(n) '= rho;']);
 eval(['rhoEx' num2str(n) '= rhoEx(x,t-dt,error);']);
-eval(['e', num2str(n), '= norm(rho',num2str(n),' - rhoEx',num2str(n),',1);']);
-eval(['taberr(i) = e' num2str(n) ';']);
+eval(['e1_', num2str(n), '= norm(rho',num2str(n),' - rhoEx',num2str(n),',1);']);
+eval(['taberr1(i) = e1_' num2str(n) ';']);
+eval(['e2_', num2str(n), '= norm(rho',num2str(n),' - rhoEx',num2str(n),',2);']);
+eval(['taberr2(i) = e2_' num2str(n) ';']);
+eval(['eInf_', num2str(n), '= norm(rho',num2str(n),' - rhoEx',num2str(n),',inf);']);
+eval(['taberrInf(i) = eInf_' num2str(n) ';']);
 eval('time(i) = toc;');
 i = i+1;
 end

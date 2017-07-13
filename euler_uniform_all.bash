@@ -48,7 +48,7 @@ Nodes[6]=6400
 #Nodes[7]=12800
 #Nodes[8]=25600
 
-k=0;
+k=0
 for essay in "${trial[@]}"; do 
 outputDir=Results/Uniform/"${dirResults[$k]}"
 if [ ! -d  "${outputDir}" ]; then 
@@ -91,8 +91,9 @@ echo ""
 
 
 # Processing
+
 cd src	
-octave --no-gui --eval "main_euler_uniform($N,'${trial[$k]}')" 
+octave --no-gui --eval "main_euler_uniform($N,'${essay}')" 
 cd ..
 
 echo ""
@@ -108,7 +109,7 @@ echo ""
 # same numer of line in time.dat as number in file
 
 
-
+mesh="${output}"/data/mesh.dat
 
 for dir in "${directory[@]}" ; do 
 files="$(ls -1v "${output}"/data/"${dir}")"
@@ -150,7 +151,7 @@ gnuplot <<- EOF
     set title "${titre} at t = ${time} s."   
     set term png
     set output "${postFile}"
-    plot "${file}" using 1:2 notitle
+    plot '< paste "${mesh}" "${file}"' using 1:2 notitle
 EOF
 ((i++))
 done
@@ -170,6 +171,7 @@ rm -r "${output}"/img/$dir
 done 
 
 mv "${output}"/data/time.dat "${output}"
+mv "${output}"/data/mesh.dat "${output}"
 
 echo ""
 echo "#########################################################"
@@ -179,7 +181,6 @@ echo "#       Results are available in Results/Uniform/       #"
 echo "#                                                       #"
 echo "#########################################################"
 echo ""
-
 
 done
 ((k++))
@@ -200,5 +201,4 @@ echo "#                         2017                          #"
 echo "#                                                       #"
 echo "#########################################################"
 echo ""
-
 

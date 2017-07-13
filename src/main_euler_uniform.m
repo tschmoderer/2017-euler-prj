@@ -46,7 +46,7 @@ function main_euler_uniform(N,trial)
 	P = (gamma-1)*(U(3,3:end-2) - 0.5*rho.*v.*v);
 	c = speedofsound(U(:,3:end-2),gamma);
 	E = U(3,3:end-2);
-	M = v./c;
+	M = abs(v)./c;
 
 	fO = figure('visible','off');
 	 plot(x,zeros(size(x)),'*')
@@ -100,6 +100,7 @@ function main_euler_uniform(N,trial)
 	print(fE,[output,'_energy.png'],'-dpng');
 	print(fc,[output,'_sound.png'],'-dpng');
 	print(fM,[output,'_mach.png'],'-dpng');
+	dlmwrite(['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/mesh.dat'],x');
 
 	close all;
 
@@ -138,7 +139,7 @@ function main_euler_uniform(N,trial)
 		P = (gamma-1)*(U(3,3:end-2) - 0.5*rho.*v.*v);
 		c = speedofsound(U(:,3:end-2),gamma);
 		E = U(3,3:end-2);
-		M = v./c;
+		M = abs(v)./c;
 
 		% Loop
 		U = U1;
@@ -148,12 +149,12 @@ function main_euler_uniform(N,trial)
 		end
 		
 		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/time.dat'],time,' ',"-append");
-		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/density/',num2str(k),'.dat'],[x' rho'],' ');
-		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/velocity/',num2str(k),'.dat'],[x' v'],' ');
-		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/pressure/',num2str(k),'.dat'],[x' P'],' ');
-		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/energy/',num2str(k),'.dat'],[x' E'],' ');
-		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/mach/',num2str(k),'.dat'],[x' M'],' ');
-		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/sound/',num2str(k),'.dat'],[x' c'],' ');
+		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/density/',num2str(k),'.dat'],rho',' ');
+		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/velocity/',num2str(k),'.dat'],v',' ');
+		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/pressure/',num2str(k),'.dat'],P',' ');
+		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/energy/',num2str(k),'.dat'],E',' ');
+		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/mach/',num2str(k),'.dat'],M',' ');
+		dlmwrite (['../Results/Uniform/',data.dirRes,'/',num2str(N),' Nodes/data/sound/',num2str(k),'.dat'],c',' ');
 %		plot(x,rho,'b');
 %		axis([data.a data.b 0 inf]);
 %		xlabel('x')

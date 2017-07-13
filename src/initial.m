@@ -99,7 +99,7 @@ switch initial
 		data.bound = 'wall';
 		data.title = ' for the Sedov explosion at t = ';
 		data.dirRes = 'Sedov';
-		data.tshock = 0.050;
+		data.tshock = 0.50;
 		
 	case 'error_1'
 		rho0 = 1 + 0.2*sin(2*pi*data.x);
