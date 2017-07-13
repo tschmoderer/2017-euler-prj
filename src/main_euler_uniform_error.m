@@ -4,11 +4,11 @@ clear all
 close all 
 
 % Initialsation
-N = [100:200:22000];
+N = [100 200 300 400 600 800 1200 1600 2400 3200 4000 6400 9600 12800 19200 25600 38400 51200];
 T = 0.1;
 niter = 1000;
 tmp = zeros(1,length(N));
-error = 'error_1';
+error = 'error_2';
 i = 1;
 for n=N
 tic;
@@ -69,7 +69,7 @@ end
 figure;
 plot(log(N),log(taberr1),'*');
 p=polyfit(log(N),log(taberr1),1);
-x = linspace(4,10,1000);
+x = linspace(4,11,1000);
 y = polyval(p,x);
 hold on 
 plot(x,y,'r');
@@ -81,7 +81,7 @@ title('Error analysis of case 1 for the L1 norm');
 figure;
 plot(log(N),log(taberr2),'*');
 p=polyfit(log(N),log(taberr2),1);
-x = linspace(4,10,1000);
+x = linspace(4,11,1000);
 y = polyval(p,x);
 hold on 
 plot(x,y,'r');
@@ -93,7 +93,7 @@ title('Error analysis of case 1 for the L2 norm');
 figure;
 plot(log(N),log(taberrInf),'*');
 p=polyfit(log(N),log(taberrInf),1);
-x = linspace(4,10,1000);
+x = linspace(4,11,1000);
 y = polyval(p,x);
 hold on 
 plot(x,y,'r');
