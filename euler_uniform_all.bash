@@ -22,31 +22,30 @@ directory[3]=energy
 directory[4]=sound
 directory[5]=mach
 
-trial[0]=sod
-trial[1]=blast
-trial[2]=shu
-trial[3]=toro
-trial[4]=lax
-trial[5]=sedov
+#trial[0]=sod
+#trial[1]=blast
+trial[0]=shu
+trial[1]=toro
+trial[2]=lax
+trial[3]=sedov
 #trial[6]=sedov3D
 
-dirResults[0]=Sod
-dirResults[1]=Blast
-dirResults[2]=Shu-Osher
-dirResults[3]=Toro
-dirResults[4]=Lax
-dirResults[5]=Sedov
+#dirResults[0]=Sod
+#dirResults[1]=Blast
+dirResults[0]=Shu-Osher
+dirResults[1]=Toro
+dirResults[2]=Lax
+dirResults[3]=Sedov
 #dirResults[6]="Sedov 3D"
 
-Nodes[0]=100
-Nodes[1]=200
-Nodes[2]=400
-Nodes[3]=800
-Nodes[4]=1600
-Nodes[5]=3200
+#Nodes[0]=100
+#Nodes[1]=200
+#Nodes[2]=400
+#Nodes[3]=800
+#Nodes[4]=1600
+#Nodes[5]=3200
 Nodes[6]=6400
-#Nodes[7]=12800
-#Nodes[8]=25600
+
 
 k=0
 for essay in "${trial[@]}"; do 
@@ -160,8 +159,8 @@ done
 echo "$dir -- Plotting Done"
 echo ""
 
-ffmpeg  -framerate 50 -i "${output}/img/${dir}/%d.png"  "${output}"/"${dir}".mp4 -y
-ffmpeg  -framerate 50 -i "${output}/img/${dir}/%d.png"  "${output}"/"${dir}".gif -y
+ffmpeg  -framerate 150 -i "${output}/img/${dir}/%d.png"  "${output}"/"${dir}".mp4 -y
+#ffmpeg  -framerate 50 -i "${output}/img/${dir}/%d.png"  "${output}"/"${dir}".gif -y
 
 # Save Memory space : 
 #tar -zcvf "${output}"/data/$dir.tar.gz --directory="${output}"/data/$dir .
