@@ -1,0 +1,86 @@
+We are now interested in adapting our method to non regular meshes. After presenting the new mesh disposition, we will perform again the error test and several example to illustrate the robustness of the method. 
+\subsection{The nodes}
+The particular distribution of nodes we are interested in is the Gauss-Lobatto nodes. First we defined the $n$-th Legendre polynomial as follows. 
+\begin{boxeq}
+\begin{split}
+P_0(x) &= 1 \qquad \forall x \in [-1,1]\\
+P_1(x) &= x \qquad \forall x \in [-1,1] \\
+(n+1)P_{n+1}(x) &= (2n+1)xP_n(x)-nP_{n-1}(x) \qquad \forall x \in [-1,1]\\
+\end{split}
+\label{eq:lgl}
+\end{boxeq}
+
+The nodes are the $N-2$ roots of the derivative of $(n-1)$-th Legendre polynomial with the two extremities of the domain : 
+$$
+-1=x_1 < x_i\ :\ P_{n-1}'(x_i)=0 \quad i\in \llbracket 2,N-1\rrbracket < x_N = 1
+$$
+
+We can easily shifted them into $[a,b]$ with the formula : 
+$$
+x_i' = \frac{b-a}{2}x_i+\frac{a+b}{2}
+$$
+
+The nodes are computed with the Haylley's method\footnote{A method of order $3$ similar to the method of Newton.}, see \cite{wiki:halley} for further details. The recursion is the following : 
+
+\begin{boxeq}
+\begin{split}
+&x_0 = \left[-1,\left(1-\frac{3(N-1)}{8N^3}\right)\cos \left(\frac{4j+1}{4N+1}\pi \right),1\right] \quad j\in \llbracket 1,N-1 \rrbracket \\
+&\\
+&x_{n+1} = x_n - 2*\frac{P_{n-1}'(x_n)P_{n-1}''(x_n)}{2[P_{n-1}''(x_n)]^2-P_{n-1}'(x_n)P_{n-1}'''(x_n)}
+\end{split}
+\label{eq:halley}
+\end{boxeq}
+
+And the derivative are given by : 
+\begin{align*}
+\begin{split}
+P_n'(x) &= \frac{n(P_{n-1}(x)-xP_n(x))}{1-x^2}\\
+P_n''(x) &= \frac{2xP_n'(x)-n(n+1)P_n}{1-x^2}\\
+P_n'''(x) &= \frac{2xP_n''(x)-(n(n+1)-2)P_n}{1-x^2}\\
+\end{split}
+\end{align*}
+As we can see on the picture bellow, the distribution is dense on the extremities of the domain and really spaced in the center. \\
+\newpage
+\begin{figure}[!h]
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Mesh $N=10$]{\includegraphics[scale=0.45]{img/lgl_10.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Mesh $N=100$]{\includegraphics[scale=0.45]{img/lgl_100.png}}
+\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Mesh $N=5$ with $P_5$]{\includegraphics[scale=0.45]{img/lgl_5_w_P.png}\label{subfig:N5P5}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Mesh $N=10$ with $P_9$]{\includegraphics[scale=0.45]{img/lgl_10_w_P.png}\label{subfig:N10P9}} 
+\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Mesh $N=10$ in $N_b=3$ blocks]{\includegraphics[scale=0.45]{img/lgl_block_3.png}\label{subfig:B3}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Mesh $N=15$ in $N_b=5$ blocks]{\includegraphics[scale=0.45]{img/lgl_block_5.png}\label{subfig:B5}}
+\end{minipage}
+\caption{\label{fig:lglDistribution}Legendre-Gauss-Lobato mesh}
+\end{figure}
+
+On figure \ref{fig:lglDistribution}-\subref{subfig:N5P5} and \ref{fig:lglDistribution}-\subref{subfig:N10P9} we observe that the nodes we computed fit the extrema of the polynomial that is to say we get the roots of the derivative polynomial. It confirms that the code worked well.\\
+We divide our interval $[a,b]$ into $N_b$ equal blocks, and apply this mesh in each block, as we can see on \ref{fig:lglDistribution}-\subref{subfig:B3} and \ref{fig:lglDistribution}-\subref{subfig:B5}.\\
+
+Here is the code used to compute the nodes : 
+\lstinputlisting[firstline=23,caption={Implementation of the construction of the LGL nodes - lglnodes.m}]{../src/lglnodes.m}
+Please note that due to the Matlab incrementation, $N$ is shifted by one. \\
+Before we continue, I precise that we computed the cell edges of our domain and by taking the mean value for two consecutive nodes we get the cell's centers.

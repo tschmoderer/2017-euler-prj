@@ -1,0 +1,420 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% SOD %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Sod shock tube}
+We begin our collection of test with a popular one. Imagine a pipe joining a gas tank from a factory (high pressure and density of gas) to a city (small pressure and density), at $t=0$ the distribution center decide to open a valve to bring gas to the city.\\
+The domain is $\Omega = [0,1]$, and the initial conditions are : 
+\begin{boxeq}
+\begin{split}
+u(x,0)&= 0 \qquad \forall x \in \Omega \\
+\rho (x,0) &= \left\{\begin{array}{lc}
+1.0 & x\in [0,0.5]\\
+0.125 & x\in [0.5,1]\\
+\end{array} \right. \\
+P (x,0) &= \left\{\begin{array}{lc}
+1.0 & x\in [0,0.5]\\
+0.1 & x\in [0.5,1]\\
+\end{array} \right.
+\end{split}
+\end{boxeq}
+
+On this we apply wall boundary conditions and look at the result around $t=0.2$.
+
+\begin{figure}[H]
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Initial conditions]{\includegraphics[scale=0.45]{img/initial_sod.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Density]{\includegraphics[scale=0.45]{img/instance_of_sod_rho.png}}
+\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Velocity]{\includegraphics[scale=0.45]{img/instance_of_sod_u.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Pressure]{\includegraphics[scale=0.45]{img/instance_of_sod_P.png}} 
+\end{minipage}
+\caption{\label{fig:sodResult}Result for the Sod's shock tube}
+\end{figure}
+
+\newpage 
+What we observe from this simulation, relative to our gas-factory problem is that a shock wave is going to the city and if (maybe) device are not calibrate strong enough this wave could damage some material. Another interesting fact is the rarefacting wave going backward to the factory.\\
+Based on \cite{sod_analytic} (and the code in \cite{sod_analytic_code}) we can compute the analytic solution for this case. On the figure bellow we can see the difference between the analytic solution and the approximation we computed : 
+
+\begin{figure}[H]
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Density]{\includegraphics[scale=0.45]{img/numeric_vs_analytic_sod_1000_r.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Velocity]{\includegraphics[scale=0.45]{img/numeric_vs_analytic_sod_1000_U.png}}
+\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Multi nodes]{\includegraphics[scale=0.45]{img/sod_different_nodes.png}\label{subfig:sodResultsNodes}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Multi nodes zoom]{\includegraphics[scale=0.45]{img/sod_different_nodes_zoom.png}\label{subfig:sodResultsNodesZoom}} 
+\end{minipage}
+\caption{\label{fig:sodResult}Result for the Sod's shock tube with the analytic solution and for different mesh size}
+\end{figure}
+
+As we can see the method is not perfect. However the results are quiet really good and close to the analytic solution. We see on figures \ref{fig:sodResult}-\subref{subfig:sodResultsNodes} and \ref{fig:sodResult}-\subref{subfig:sodResultsNodesZoom} that the more there is nodes, the closest is the numerical result to the analytic solution. This valid our intuition that the method converged.
+
+
+
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% BLAST %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Interacting blast wave}
+\label{subsec:blast}
+See \cite{Baeza2016} and \cite{zhu2016new} (example 3.7). Almost the same story as before, but this time there is two gas tank providing gas to the city, and two valves are open at $t=0$.\\
+The initial conditions are : 
+\begin{boxeq}
+\begin{split}
+u(x,0)&= 0 \qquad \forall x \in \Omega \\
+\rho (x,0) &= 1 \qquad \forall x \in \Omega \\
+P (x,0) &= \left\{\begin{array}{lc}
+1000 & x\in [0,0.1]\\
+0.01 & x\in [0.1,0.9]\\
+100 & x\in [0.9,1]\\
+\end{array} \right.
+\end{split}
+\end{boxeq}
+We use again solid wall boundary conditions and watch the result around $t=0.038$. 
+
+
+\begin{figure}[!h]
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Initial conditions]{\includegraphics[scale=0.45]{img/initial_blast.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Density]{\includegraphics[scale=0.45]{img/instance_of_blast_rho.png}}
+\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Velocity]{\includegraphics[scale=0.45]{img/instance_of_blast_u.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Pressure]{\includegraphics[scale=0.45]{img/instance_of_blast_P.png}} 
+\end{minipage}
+\caption{\label{fig:blastResult}Result for the blast wave}
+\end{figure}
+
+\newpage 
+The conclusion of our story is that better not to put a weak device arroun $x=0.6$.\\
+Unfortunately there is no analytic solution for this case. Hence, in order to  observe the convergence of the method I used a WENO-5 method, from \cite{iWENO}, to compute a reference solution with $16000$ nodes.
+
+\begin{figure}[H]
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Density]{\includegraphics[scale=0.45]{img/numeric_vs_analytic_blast_1000_r.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Velocity]{\includegraphics[scale=0.45]{img/numeric_vs_analytic_blast_1000_U.png}}
+\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Multi nodes]{\includegraphics[scale=0.45]{img/blast_different_nodes.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Multi nodes zoom]{\includegraphics[scale=0.45]{img/blast_different_nodes_zoom.png}} 
+\end{minipage}
+\caption{Result for the blast wave problem with the reference solution and for different mesh size}
+\end{figure}
+
+We can observe that the solution computed is close from the reference one. But we got a a bit more errors than in the previous case. This is  probably due to the complexity of the case and the numerical pollution from Matlab execution. However we get the general forms of the solution and the shocks are well disposed so the method did not compute all wrong.
+
+\newpage 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% LAX %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Lax's shock tube}
+See \cite{zhu2016new} (example 3.5).
+The initial conditions are :
+\begin{boxeq}
+\begin{split}
+u(x,0)&= \left\{\begin{array}{lc}
+0.698 & x\in [0,0.5]\\
+0 & x\in [0.5,1]\\
+\end{array} \right.\\
+\rho (x,0) &= \left\{\begin{array}{lc}
+0.445 & x\in [0,0.5]\\
+0.5 & x\in [0.5,1]\\
+\end{array} \right. \\
+P (x,0) &= \left\{\begin{array}{lc}
+3.528 & x\in [0,0.5]\\
+0.571 & x\in [0.5,1]\\
+\end{array} \right.
+\end{split}
+\end{boxeq}
+We use inlet conditions on the left and solid wall conditions in the right boundary and watch the result around $t=0.16$. 
+Inlet conditions are : 
+$$
+u(0,t) = 0.698 \quad
+\rho (0,t) = 0.445 \quad
+P(0,t) = 3.528
+$$
+
+
+\begin{figure}[!h]
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Initial conditions]{\includegraphics[scale=0.45]{img/initial_lax.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Density]{\includegraphics[scale=0.45]{img/instance_of_lax_rho.png}}
+\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Velocity]{\includegraphics[scale=0.45]{img/instance_of_lax_u.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Pressure]{\includegraphics[scale=0.45]{img/instance_of_lax_P.png}} 
+\end{minipage}
+\vspace{-0.5cm}
+\caption{\label{fig:laxResult}Result for the Lax's shock tube}
+\vspace{-0.5cm}
+\end{figure}
+
+\newpage
+For this case, as for the Sod's shock tube, there exists an analytic solutions. Thus 
+we can compare our method to this solution. 
+
+\begin{figure}[H]
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Density]{\includegraphics[scale=0.45]{img/numeric_vs_analytic_lax_1000_r.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Velocity]{\includegraphics[scale=0.45]{img/numeric_vs_analytic_lax_1000_U.png}}
+\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Multi nodes]{\includegraphics[scale=0.45]{img/lax_different_nodes.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Multi nodes zoom]{\includegraphics[scale=0.45]{img/lax_different_nodes_zoom.png}} 
+\end{minipage}
+\caption{Result for the Lax's shock tube with the analytic solution and for different mesh size}
+\end{figure}
+
+Again, we observe that the method fit well the analytic solution and captured the shocks. 
+
+
+
+
+\newpage 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% SHU %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Shu-Osher's problem}
+\label{subsec:shu}
+See \cite{shu-osher_problem} and \cite{zhu2016new} (example 3.6). The initial conditions are :
+\begin{boxeq}
+\begin{split}
+u(x,0)&= \left\{\begin{array}{lc}
+2.629369 & x\in [0,0.125]\\
+0 & x\in [0.125,1]\\
+\end{array} \right.\\
+\rho (x,0) &= \left\{\begin{array}{lc}
+3.857143 & x\in [0,0.125]\\
+1+0.2\sin (20\pi x) & x\in [0.125,1]\\
+\end{array} \right. \\
+P (x,0) &= \left\{\begin{array}{lc}
+31/3 & x\in [0,0.125]\\
+1 & x\in [0.125,1]\\
+\end{array} \right.
+\end{split}
+\end{boxeq}
+This time we use inlet conditions on the left and outflow conditions on the right. The inlet conditions are : 
+$$
+u(0,t) = 2.629369 \quad
+\rho (0,t) = 3.857143 \quad
+P(0,t) = 31/3
+$$
+
+
+\vspace{-1.3cm}
+\begin{figure}[!h]
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Initial conditions]{\includegraphics[scale=0.45]{img/initial_shu.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Density]{\includegraphics[scale=0.45]{img/instance_of_shu_rho.png}}
+\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Velocity]{\includegraphics[scale=0.45]{img/instance_of_shu_u.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Pressure]{\includegraphics[scale=0.45]{img/instance_of_shu_P.png}} 
+\end{minipage}
+\vspace{-0.5cm}
+\caption{\label{fig:shuResult}Result for the Shu-Osher's problem}
+\vspace{-0.5cm}
+\end{figure}
+
+\newpage 
+
+Again we don't know any analytic solution for this case, so the reference solution is given by the WENO-5 method on 16000 nodes. 
+
+\begin{figure}[H]
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Density]{\includegraphics[scale=0.45]{img/numeric_vs_analytic_shu_1000_r.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Velocity]{\includegraphics[scale=0.45]{img/numeric_vs_analytic_shu_1000_U.png}}
+\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Multi nodes]{\includegraphics[scale=0.45]{img/shu_different_nodes.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Multi nodes zoom]{\includegraphics[scale=0.45]{img/shu_different_nodes_zoom.png}} 
+\end{minipage}
+\caption{Result for the Shu-Osher problem with the reference solution and for different mesh size}
+\end{figure}
+
+We definitely observe that the method converge to the reference solution. 
+
+\newpage 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% SEDOV %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Sedov explosion}
+The initial conditions are :
+\begin{boxeq}
+\begin{split}
+u(x,0)&= 0 \qquad \forall x \in \Omega \\
+\rho (x,0) &= 1 \qquad \forall x \in \Omega \\
+P (x,0) &= \left\{\begin{array}{lc}
+1& x \in [0.5-3.5\frac{\Delta x}{2},0.5+3.5\frac{\Delta x}{2}]\\
+10^{-5} & \text{ else }\\
+\end{array} \right.
+\end{split}
+\end{boxeq}
+We use again solid wall boundary conditions and watch the result around $t=0.005$. 
+
+
+\begin{figure}[!h]
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Initial conditions]{\includegraphics[scale=0.45]{img/initial_sedov.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Density]{\includegraphics[scale=0.45]{img/instance_of_sedov_rho.png}}
+\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Velocity]{\includegraphics[scale=0.45]{img/instance_of_sedov_u.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Pressure]{\includegraphics[scale=0.45]{img/instance_of_sedov_P.png}} 
+\end{minipage}
+\caption{\label{fig:sedovResult}Result for the Sedov's explosion}
+\end{figure}
+
+\newpage
+
+Again we don't know any analytic solution for this case, so the reference solution is given by the WENO-5 method on 16000 nodes. We watch the result at $t=0.002$.
+
+\begin{figure}[H]
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Density]{\includegraphics[scale=0.45]{img/numeric_vs_analytic_sedov_1000_r.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Velocity]{\includegraphics[scale=0.45]{img/numeric_vs_analytic_sedov_1000_U.png}}
+\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Multi nodes]{\includegraphics[scale=0.45]{img/sedov_different_nodes.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Multi nodes zoom]{\includegraphics[scale=0.45]{img/sedov_different_nodes_zoom.png}} 
+\end{minipage}
+\caption{Result for the Sedov explosion with the reference solution and for different mesh size}
+\end{figure}
+This case is very special, because of the sharp discontinuities a lot more of nodes are needed to get a good approximation of the discontinuities. \\
+It is also a good example of nodes-waste : to get a good approximation we should compute on a very coarse grid near the shock front but we don't need a lot of nodes in the extremities. Here an adaptive mesh would improve the execution time and with the same number of nodes (but better disposed) we could achieve greater accuracy.

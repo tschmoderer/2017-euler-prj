@@ -1,0 +1,16 @@
+\section{Concluding remarks}
+To sum this survey up, we saw through this report the implementation of a second order finite difference method for the compressible Euler's gas equations. We saw how to compute the convergence rate when we do not dispose of analytic solutions. We construct the Legendre-Gauss-Lobatto grid and adapt the method on it. We surprisingly remarked that the method is always second order even on this grid, and two example showed that this non-uniform is less accurate. Finally I would like to stress out the fact that this adaptation on non-uniform mesh is probably not the best update we could do to the method. As we discussed in the Sedov's explosion section, adaptive mesh would have been more efficient on those cases. \\
+
+To conclude on a personal feeling about this work, I think the most difficult part was to work through the literature and to understand all the differences between finite differences scheme and finite volume scheme. Because in 1D they have really similar form. Then I need a few more time to understand the data structure needed for implementation, especially the nodes numbering (because from one paper to another there is always two king of numbering). But since I have understood the trick with the nodes numbering, the implementation was straight forward. \\
+
+Finally this internship introduce me to the research in university laboratory. This experiences was really interesting in many ways. First, the topic appealed to lot of my knowledge and using them on such new problem was really satisfying. I finally understood what a weak solution of a partial differential equation is. Second, this experience tough me to work in autonomy, to find solution by myself and to read research article. \\
+\newline
+
+\begin{center}
+\begin{minipage}{0.6\linewidth}
+\begin{joke}
+Have you already wondered why, in deriving $\exp$, the function remains the same ? \\
+Because she saw what Euler did to the governing equations of the fluids dynamics and decided to remain quiet. 
+\end{joke}
+\end{minipage}
+\end{center}

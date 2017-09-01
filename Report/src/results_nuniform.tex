@@ -1,0 +1,76 @@
+\subsection{Interacting Blast Wave}
+As announced before, the next page will show the result computed for the interacting blast wave problem. We show the result for different number of blocks but we always kept the total number of nodes to be $1000$.\\
+On each figure are plotted the reference solution computed with WENO ($16000$ nodes), the solution computed on a $1000$ uniform mesh and the solution on the non uniform mesh.\\
+\newline
+My observation are the following, the method converged well on this grid and the shock are well disposed. This solution seems to be smoother than the uniform-one. According to me, that's the reason why the non-uniform-solution is less accurate than the other (particularly on the right pick). 
+Another little inconvenient of the method, is that the execution time is a bit longer due to the dense distribution on the extremities (the ore there is nodes in a block the most time it took) which give a small $\Delta t$.
+
+
+\begin{figure}[!h]
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Blast Wave with 2 blocks with 500 nodes each]{\includegraphics[scale=0.45]{{"img/blast_2_b_500_n_with_reference_and_uniform"}.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Blast Wave with 10 blocks with 100 nodes each]{\includegraphics[scale=0.45]{{"img/blast_10_b_100_n_with_reference_and_uniform"}.png}}
+\end{minipage}
+%\vspace{0.5cm}
+%\hspace{-1.3cm}
+%\begin{minipage}{.5\linewidth}
+%\centering
+%\subfloat[Blast Wave with 5 blocks with 200 nodes each]{\includegraphics[scale=0.45]{{"img/blast_5_b_200_n_with_reference_and_uniform"}.png}}
+%\end{minipage}
+%\hfill
+%\begin{minipage}{.5\linewidth}
+%\centering
+%\subfloat[Blast Wave with 20 blocks with 50 nodes each]{\includegraphics[scale=0.45]{{"img/blast_20_b_50_n_with_reference_and_uniform"}.png}}
+%\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Blast Wave with 100 blocks with 10 nodes each]{\includegraphics[scale=0.45]{{"img/blast_100_b_10_n_with_reference_and_uniform"}.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Blast Wave with 500 blocks with 2 nodes each]{\includegraphics[scale=0.45]{{"img/blast_500_b_2_n_with_reference_and_uniform"}.png}}
+\end{minipage}
+\caption{Interacting blast wave on non uniform mesh}
+\end{figure}
+
+
+
+\clearpage
+\subsection{Shu Osher Problem}
+In this case we have almost the same observation as in the previous example. We can just add that the resolution in the left part of the front wave (the part where there is higher frequency oscillations), the resolution is actually not as good as in the uniform case. Moreover, the less nodes there is in a block, the less accurate is the solution. \\
+
+\begin{figure}[!h]
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Shu Osher problem with 2 blocks with 500 nodes each]{\includegraphics[scale=0.45]{{"img/shu_2_b_500_n_with_reference_and_uniform"}.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Shu Osher problem with 10 blocks with 100 nodes each]{\includegraphics[scale=0.45]{{"img/shu_10_b_100_n_with_reference_and_uniform"}.png}}
+\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Shu Osher problem with 100 blocks with 10 nodes each]{\includegraphics[scale=0.45]{{"img/shu_100_b_10_n_with_reference_and_uniform"}.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Shu Osher problem with 500 blocks with 2 nodes each]{\includegraphics[scale=0.45]{{"img/shu_500_b_2_n_with_reference_and_uniform"}.png}}
+\end{minipage}
+\caption{Interacting blast wave on non uniform mesh}
+\end{figure}
+
+

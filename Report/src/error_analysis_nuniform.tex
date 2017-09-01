@@ -1,0 +1,87 @@
+\subsection{Error and convergence}
+As before we computed the convergence rate with the method of the manufactured solutions. We take the two same previous cases :
+
+\begin{boxeq}
+\begin{split}
+\text{Case 1 :}\ &\left\{
+\begin{split}
+\rho(x,0) &= 1 + 0.2\sin (2\pi x) \quad \forall x\in \Omega\\
+u(x,0) &= 1 \quad \forall x\in \Omega\\
+P(x,0)&= 1 \quad \forall x\in \Omega\\
+\end{split}\right.
+\\
+&\mathcal{S}_1(x,t)=\begin{pmatrix}
+0\\
+0\\
+0
+\end{pmatrix}
+\\
+\text{Case 2 :}\ &\left\{
+\begin{split}
+u(x,0) &= 1 \quad \forall x\in \Omega\\
+\rho(x,0) &= 2 + 0.1\sin (2\pi x) \quad \forall x\in \Omega\\
+P(x,0)&= \frac{\gamma -1}{20}\left(20+2\cos (2\pi x)-sin(2\pi x)\right) \quad \forall x\in \Omega\\
+\end{split}\right.
+\\
+&\mathcal{S}_2(x,t) =
+(1-\gamma)\pi (2\rho (x,t) + E(x,t) -6)
+\begin{pmatrix}
+0\\
+1\\
+1\\
+\end{pmatrix}
+\end{split}
+\end{boxeq}
+
+The results are quiet surprising. The convergence rate is the same as for the uniform case. It is surprising that we got such perfect fitting to straight lines. We could imagine that due to this particular distribution, the error would fluctuate more.\\
+It also seems that the convergence rate doesn't depends on the number of blocks. 
+\newpage
+
+\begin{figure}[!h]
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Case 1 : Error $L^1$ with $1$ block]{\includegraphics[scale=0.45]{{"../Results/Error/Case 1/nuniform_block_1_error_L1"}.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Case 1 : Error $L^{\infty}$ with $1$ block]{\includegraphics[scale=0.45]{{"../Results/Error/Case 1/nuniform_block_1_error_LInf"}.png}}
+\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Case 1 : Error $L^{1}$ with $5$ blocks]{\includegraphics[scale=0.45]{{"../Results/Error/Case 1/nuniform_block_5_error_L1"}.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Case 1 : Error $L^{\infty}$ with $5$ blocks]{\includegraphics[scale=0.45]{{"../Results/Error/Case 1/nuniform_block_5_error_LInf"}.png}} 
+\end{minipage}
+\vspace{0.5cm}
+\hspace{-1.3cm}
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Case 2 : Error $L^1$ with $1$ block]{\includegraphics[scale=0.45]{{"../Results/Error/Case 2/nuniform_block_1_error_L1"}.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{.5\linewidth}
+\centering
+\subfloat[Case 2 : Error $L^{1}$ with $5$ blocks]{\includegraphics[scale=0.45]{{"../Results/Error/Case 2/nuniform_block_5_error_L1"}.png}}
+\end{minipage}
+%\vspace{0.5cm}
+%\hspace{-1.3cm}
+%\begin{minipage}{.5\linewidth}
+%\centering
+%\subfloat[Case 2 : Error $L^{\infty}$ with $1$ block]{\includegraphics[scale=0.45]{{"../Results/Error/Case 2/nuniform_block_1_error_LInf"}.png}}
+%\end{minipage}
+%\hfill
+%\begin{minipage}{.5\linewidth}
+%\centering
+%\subfloat[Error $L^{\infty}$ with $5$ blocks]{\includegraphics[scale=0.45]{{"../Results/Error/Case 2/nuniform_block_5_error_LInf"}.png}} 
+%\end{minipage}
+\caption{Error analysis for non uniform meshes}
+\end{figure}
+
+

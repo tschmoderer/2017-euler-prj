@@ -1,0 +1,136 @@
+\subsection{Error and convergence}
+Because we don't know the analytic solution we adopt the \emph{Manufactured Solution} strategy to check the convergence rate of the method : 
+\begin{enumerate}
+\item We choose $q(x,t)\in \RR^3$ as smooth as possible to be the solution of equations (\ref{eq:EulerGasEquation}). 
+\item We put $q$ in the Euler's equations and get, in general, a non zeros result (otherwise, it will mean we have an analytical solution, which is in general not possible). Let's call the rest $\mathcal{S}(x,t)$ : 
+$$
+\frac{\partial q}{\partial t} + \frac{\partial f(q)}{\partial x} = \mathcal{S}
+$$
+\item We now consider the modified problem : 
+\begin{boxeq}
+\begin{split}
+\centering
+&\frac{\partial U}{\partial t} + \frac{\partial f(U)}{\partial x} = \mathcal{S}\\
+&U(x,0)=q(x,0)\\
+\text{Plus boundary}&\text{ conditions to be discusses bellow}
+\end{split}
+\end{boxeq}
+For which we know the solution to be $q$.
+\item We apply our method to this problem. It requires minor modification in the code to add the source term.
+\item We can now compare the numerical solution to the analytical one. And compute the convergence rate.
+\end{enumerate}
+A common choice in this approach is to choose periodic boundary conditions in keep smooth solutions (which is not systemically the case with wall conditions). Two choice of $q$ are presented bellow in order to be certain that the method is of order $2$.
+
+\subsubsection{Case 1}
+This case could be found in \cite{zhu2016new} (example 3.3).\\
+For this first case we want the solution to be : 
+$$
+q= \left\{
+\begin{array}{ccl}
+\rho (x,t) &=& 1+0.2\sin (2\pi (x-t))\\
+u(x,t) &=&1\\
+P(x,t) &=& 1\\
+\end{array}
+\right.
+$$ 
+The solution have to be periodic that's why the choice of the $\sin$ function is natural to get both smooth and periodic properties.
+Then a little computation using the equation of state gives the solution for the energy : 
+$$
+E(x,t) = \frac{\gamma +1}{2(\gamma -1)} +0.1\sin (2\pi (x-t))
+$$
+Hence the initial conditions are the following : 
+\begin{boxeq}
+\begin{split}
+\rho(x,0) &= 1 + 0.2\sin (2\pi x) \quad \forall x\in \Omega\\
+u(x,0) &= 1 \quad \forall x\in \Omega\\
+P(x,0)&= 1 \quad \forall x\in \Omega\\
+\end{split}
+\label{eq:errorCase1}
+\end{boxeq}
+In this particular case, the source term is identically zero :
+$$
+\mathcal{S}(x,t)=\begin{pmatrix}
+0\\
+0\\
+0
+\end{pmatrix}
+$$ 
+Thus, here we got an analytical solution to the problem (which enough remarkable).\\
+We make computation for $100,\ 200,\ 300,\ 400,\ 600,\ 800,\ 1200,\ 1600,\ 2400,\ 3200,\ 4000$ $6400,\ 9600,\ 12800,\ 19200,\ 25600,\ 38400,\ 51200$
+ nodes and up to $1000$ iterations. Hence we are able to compare the exact solution for the density and the numerical approximation. Figures \ref{fig:errorCase1L1} and \ref{fig:errorCase1Linf} show the $\log$ of the error for the $L^1$ and $L^{\infty}$ norms against the $\log$ of the number of nodes. \\
+
+\begin{figure}[!h]
+\captionsetup{justification=centering}
+\begin{minipage}{0.45\linewidth}
+\centering
+\includegraphics[width=\linewidth]{{"../Results/Error/Case 1/uniform_error_L1"}.png}
+\caption{\label{fig:errorCase1L1}Convergence rate for manufactured solution \# 1 in $L^1$ norm}
+\end{minipage}
+\begin{minipage}{0.45\linewidth}
+\centering
+\includegraphics[width=\linewidth]{{"../Results/Error/Case 1/uniform_error_LInf"}.png}
+\caption{\label{fig:errorCase1Linf}Convergence rate for manufactured solution \# 1 in $L^{\infty}$ norm}
+\end{minipage}
+\end{figure}
+
+Where the $L^1$ and $L^{\infty}$ norms are the following : 
+$$
+\|U^{ex} - U^{a}\|_1 = \sum_{j=1}^N |U^{ex}(x_j)-U^a_j| \qquad \|U^{ex} - U^{a}\|_{\infty} = \max_{j=1..N} |U^{ex}(x_j)-U^a_j|
+$$
+
+The $\log error$ perfectly fit a $-2$ slope line. Hence as we hoped, the method seems to be of order $2$.
+
+\subsubsection{Case 2}
+The idea behind this case comes mainly from \cite{gassner2014kinetic}\\
+The second case will comfort us in the fact tat the method is of order 2. We want the solution to be : 
+$$
+q= \left\{
+\begin{array}{ccl}
+\rho (x,t) &= &2+0.1\sin (2\pi (x-t)) \\
+u(x,t) &=& 1\\
+E(x,t)& =& 2+0.1\cos (2\pi (x-t))
+\end{array}
+\right.
+$$
+
+Then, the initial conditions are the following :
+\begin{boxeq}
+\begin{split}
+u(x,0) &= 1 \quad \forall x\in \Omega\\
+\rho(x,0) &= 2 + 0.1\sin (2\pi x) \quad \forall x\in \Omega\\
+P(x,0)&= \frac{\gamma -1}{20}\left(20+2\cos (2\pi x)-sin(2\pi x)\right) \quad \forall x\in \Omega\\
+\end{split}
+\label{eq:errorCase2}
+\end{boxeq}
+
+And the source term is given by : 
+\begin{boxeq}
+\mathcal{S}(x,t) =
+(1-\gamma)\pi (2\rho (x,t) + E(x,t) -6)
+\begin{pmatrix}
+0\\
+1\\
+1\\
+\end{pmatrix}
+\label{eq:sourceCase2}
+\end{boxeq}
+
+After modifications of the code to handle the source term, we again make computation for $100,\ 200,\ 300,\ 400,\ 600,\ 800,\ 1200,\ 1600,\ 2400,\ 3200,\ 4000$ $6400,\ 9600,\ 12800,\ 19200,\ 25600,\ 38400,\ 51200$ nodes with step of $100$ nodes up to $1000$ iterations. Hence we are able to compare the exact solution and the numerical approximation. Figures \ref{fig:errorCase2L1} and \ref{fig:errorCase2Linf} shows the $\log$ of the error against the $\log$ of the number of nodes. \\
+\begin{figure}[!h]
+\captionsetup{justification=centering}
+\begin{minipage}{0.45\linewidth}
+\centering
+\includegraphics[width=\linewidth]{{"../Results/Error/Case 2/uniform_error_L1"}.png}
+\caption{\label{fig:errorCase2L1}Convergence rate for manufactured solution \# 2 in $L^1$ norm}
+\end{minipage}
+\begin{minipage}{0.45\linewidth}
+\centering
+\includegraphics[width=\linewidth]{{"../Results/Error/Case 2/uniform_error_LInf"}.png}
+\caption{\label{fig:errorCase2Linf}Convergence rate for manufactured solution \# 2 in $L^{\infty}$ norm}
+\end{minipage}
+\end{figure}
+
+Again the convergence rate is really near $2$. We can conclude that the method it of order $2$ as announced.\\
+
+Having satisfying ourselves with the convergence rate we can now observe the method working on several typical example. For each example, I will try to give a real-life situation where the phenomenon describe could occur.
+
