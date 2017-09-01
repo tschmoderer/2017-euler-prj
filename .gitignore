@@ -14,6 +14,9 @@ src/check*
 src/main_euler_gr*
 src/RI*
 src/Ri*
+euler_create*
+euler_postpro*
+euler_uniform*
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
