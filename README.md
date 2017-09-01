@@ -16,30 +16,29 @@ You will find :
   - LICENSE : GNU General License
   - In src/ : all the code I've made
     - boundary.m :  management of different boundary conditions
-    - construct_nodes : function to construct the mesh in the case of non uniform nodes distribution
     - f.m : compute the flux function
     - initial.m : set all initial value 
-    - main_euler_non_uniform : main routine for non uniform meshes
-    - main_euler_uniform : main routine for uniform meshes
-    - main_euler_uniform_error.m : main routine to check rate of convergence of teh method
-    - main_euler_uniform_gui : main routine for uniform meshes with GUI visualization
+    - lglnodes.m : procedure to compute the LGL non uniform mesh
+    - main_euler : main routine
+    - main_euler_error.m : main routine to check rate of convergence of teh method
     - minmod.m : compute the minmod function
-    - qf_non_uniform.m : function to compute the second member for non uniform meshes
-    - qf_uniform.m : function to compute the second member for uniform meshes
-    - rhoEx.m : compute the analytic solution for the main_euler_uniform_error
+    - qf.m : function to compute the second member of the method
+    - qf_weno.m : compute the second memeber for the WENO method
+    - rhoEx.m : compute the analytic solution for the main_euler_error
     - source.m compute the source term for the main_euler_uniform_error
     - speedofsound.m : compute the speed of sound in the domain 
-    - test.m : a test routine for a 2D result
+    - weno.m : A WENO-5 method to compute reference solutions
+    - weno_error.m : a procedure to check the WENO rate of convergence
     
   - In Results/ : All results I have already compute for you 
-  	- Non Uniform/ 
-      - Coming soon
+    - Error/
+      - Case 1 or 2/error in norms 1,2 or infinity on uniform and non uniform mesh
+      - WENO/error analysis for the weno method
+      
      - Uniform/ : results compute on regular meshes 
       The structure is the following : 
-        - Case/ : case tested could take value in [Blast, Lax,Sedov,Sedov 3D,Shu-Osher,Sod,Toro]
+        - Case/ : case tested could take value in [Blast, Lax,Sedov, Shu-Osher,Sod,Toro]
           - N Nodes/ 
-            - data/ : archive of the data computed
-            - img/ : archive of the image computed with gnuplot
             - initial/ : images of the initial conditions 
             - shock/ : images at the shock time (or any interesting time)
             - *.gif : GIF animation for all quantities we are interested in
@@ -48,17 +47,14 @@ You will find :
    - In Report/ : some text to explain this work
      - analysis of the method.pdf : a summary of the next file 
      - main.pdf : the full report of this work
-   - euler_non_uniform.bash : a script t make computation in teh non uniform case
-   -euler_uniform_all.bash : a script to make all the simulation I computed in one shot, better be sure before launching blindly this programm.
 
  ## How to run 
  It depends what do you want to do : 
  1. I *strongly* recommand to read at least the Report/analysis of the method.pdf file before you launch the method.
- 2. I suggests you begin with launching main_euler_uniform_gui.m with octave (Lanching with matlab is possible but you might have to do some minor changes in the code), in order to get familiar with the cases and the method. 
- 3. If you want to launch all the simulation (might take a long time and use a lot of you computer ressources) lauch euler_uniform_all.bash from the consol. 
+ 2. I suggests you begin with launching main_euler.m with octave (Lanching with matlab is possible but you might have to do some minor changes in the code), in order to get familiar with the cases and the method. 
+ 3. Then you can adapt the procedure to your case by modifying the initial conditions function
  
 ## Coming Soon 
- - The routine for non uniform meshes 
  - Maybe the routine in C
  
 ## Contact 
