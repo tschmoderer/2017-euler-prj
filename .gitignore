@@ -10,6 +10,10 @@ Report/*.tex
 Report/*.bib
 
 src/octave-workspace
+src/check*
+src/main_euler_gr*
+src/RI*
+src/Ri*
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
