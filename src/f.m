@@ -19,10 +19,14 @@
 %----------------------------------------------------------%
 
 function y = f(U,gamma)
+	% Density
+	rho = U(1,:);
 	% Velocity
-	v = U(2,:)./U(1,:);
+	v = U(2,:)./rho;
+	% Energy
+	E = U(3,:);
 	% Pressure
-	P = (gamma-1)*(U(3,:)-0.5*U(1,:).*v.*v);
+	P = (gamma-1)*(E-0.5*rho.*v.*v);
 	% Flux
 	y = U.*v+[zeros(size(P));P;P.*v];
 end

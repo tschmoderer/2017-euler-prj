@@ -21,8 +21,12 @@
 function c = speedofsound(U,gamma)
 	% Density
 	rho = U(1,:);
+	% Velocity
+	v = U(2,:)./rho;
+	% Energy
+	E = U(3,:);
 	% Pressure
-	P = (gamma-1)*(U(3,:)-0.5*(U(2,:).^2)./rho);
+	P = (gamma-1)*(E-0.5*rho.*v.*v);
 	% Speed of sound
 	c = sqrt(gamma*P./rho);
 end
