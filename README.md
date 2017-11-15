@@ -65,6 +65,6 @@ If you notice any problem or have any trouble with the program, please feel free
 <p align="center">
 You can use and reproduce this codes as you like.<br>
 This project was made in my fourth year at INSA ROUEN NORMANDIE (FRANCE) in the departement of applied mathematics. <br>
-This project was realize for the University of Cologne as a summer internship <br>
+This project was realized for the University of Cologne as a summer internship <br>
 2017
 </p>
